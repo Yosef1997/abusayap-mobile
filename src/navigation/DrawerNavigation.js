@@ -3,12 +3,13 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import Home from '../screens/Home';
 import AuthStack from './AuthStack';
 import History from '../screens/History';
+import CostumDrawerNav from '../components/CostumDrawerNav';
 
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigation() {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator drawerContent={props => <CostumDrawerNav {...props} />}>
       <Drawer.Screen
         name="Auth"
         component={AuthStack}
