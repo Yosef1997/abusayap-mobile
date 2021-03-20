@@ -43,14 +43,14 @@ const CostumDrawerNav = props => {
             <LineIcon name="arrow-up-circle" size={size} color={color} />
           )}
           label="Transfer"
-          onPress={() => props.navigation.navigate('selfProfile')}
+          onPress={() => props.navigation.navigate('Transfer')}
         />
         <DrawerItem
           icon={({color, size}) => (
             <LineIcon name="plus" size={size} color={color} />
           )}
           label="Top Up"
-          onPress={() => props.navigation.navigate('Contact')}
+          onPress={() => props.navigation.navigate('Topup')}
         />
         <DrawerItem
           icon={({color, size}) => (
