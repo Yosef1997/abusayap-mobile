@@ -50,14 +50,14 @@ const CostumDrawerNav = props => {
             <LineIcon name="plus" size={size} color={color} />
           )}
           label="Top Up"
-          onPress={() => props.navigation.navigate('Contact')}
+          onPress={() => props.navigation.navigate('TopUp')}
         />
         <DrawerItem
           icon={({color, size}) => (
             <LineIcon name="user" size={size} color={color} />
           )}
           label="Profile"
-          onPress={() => props.navigation.navigate('Contact')}
+          onPress={() => props.navigation.navigate('Profile')}
         />
       </DrawerContentScrollView>
       <View style={style.rowSignOut}>
