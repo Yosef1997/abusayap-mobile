@@ -1,21 +1,20 @@
 import React, {Component} from 'react';
 import {Text, View, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import ProfilImg from '../assets/images/profile.jpg';
 
 export default class index extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity>
-          <Image source={ProfilImg} style={styles.img} />
+        <TouchableOpacity onPress={this.props.onPress}>
+          <Image source={this.props.source} style={styles.img} />
           <View style={styles.row}>
             <Icon name="edit-2" size={13} color="#7A7886" />
             <Text style={styles.text}>Edit</Text>
           </View>
         </TouchableOpacity>
-        <Text style={styles.name}>Robert Chandler</Text>
-        <Text style={styles.number}>+62 813-9387-7946</Text>
+        <Text style={styles.name}>{this.props.name}</Text>
+        <Text style={styles.number}>+62{this.props.phone}</Text>
       </View>
     );
   }

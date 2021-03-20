@@ -10,8 +10,19 @@ import {
 import Icon from 'react-native-vector-icons/AntDesign';
 import InputPhone from '../components/InputPhone';
 import Button from '../components/ButtonProfile';
+import {connect} from 'react-redux';
+import {updateUser} from '../redux/actions/UpdateProfile';
 
-export default class AddPhoneNumber extends Component {
+class AddPhoneNumber extends Component {
+  state = {
+    phoneNumber: '',
+  };
+  doUpdatePhone = async () => {
+    const {phoneNumber} = this.state;
+    const data = new FormData();
+    data.append('phoneNumber', phoneNumber);
+    await this.props.updateUser('28', data);
+  };
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -27,8 +38,10 @@ export default class AddPhoneNumber extends Component {
           Add at least one phone number for the transfer{'\n'}ID so you can
           start transfering your money to{'\n'}another user.
         </Text>
-        <InputPhone />
-        <Button label="Submit" />
+        <InputPhone
+          onChangeText={phoneNumber => this.setState({phoneNumber})}
+        />
+        <Button label="Submit" onPress={this.doUpdatePhone} />
       </ScrollView>
     );
   }
@@ -63,3 +76,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  update: state.profile,
+});
+const mapDispatchToProps = {updateUser};
+export default connect(mapStateToProps, mapDispatchToProps)(AddPhoneNumber);

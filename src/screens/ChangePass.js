@@ -9,8 +9,19 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Button from '../components/ButtonProfile';
+import {connect} from 'react-redux';
+import {updateUser} from '../redux/actions/UpdateProfile';
 
-export default class ChangePass extends Component {
+class ChangePass extends Component {
+  state = {
+    currentPassword: '',
+    newPassword: '',
+    repeatPassword: '',
+  };
+  // doChangePass = async () => {
+  //   const {currentPassword, newPassword, repeatPassword} = this.state;
+
+  // };
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -60,3 +71,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
+const mapStateToProps = state => ({
+  auth: state.auth,
+  update: state.profile,
+});
+const mapDispatchToProps = {updateUser};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePass);

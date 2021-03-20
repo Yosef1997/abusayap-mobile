@@ -9,8 +9,26 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Button from '../components/ButtonProfile';
+import {connect} from 'react-redux';
+import {updateUser} from '../redux/actions/UpdateProfile';
 
-export default class ChangePin extends Component {
+class ChangePin extends Component {
+  state = {
+    pin: '',
+  };
+  doChangePin = async () => {
+    const {pin} = this.state;
+    const data = new FormData();
+    data.append('pin', pin);
+    await this.props.updateUser('28', data);
+  };
+  doUpdatePhone = async () => {
+    const {pin} = this.state;
+    const data = new FormData();
+    data.append('pin', pin);
+    await this.props.updateUser('28', data);
+  };
+
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -60,3 +78,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  update: state.profile,
+});
+const mapDispatchToProps = {updateUser};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePin);
