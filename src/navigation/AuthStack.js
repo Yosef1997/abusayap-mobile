@@ -8,8 +8,16 @@ function AuthStack(props) {
   return (
     <>
       <Stack.Navigator>
-        <Stack.Screen component={Login} name="Login" />
-        <Stack.Screen component={Register} name="Register" />
+        <Stack.Screen
+          component={Login}
+          name="Login"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={Register}
+          name="Register"
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </>
   );
