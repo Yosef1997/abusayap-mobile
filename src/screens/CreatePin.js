@@ -7,10 +7,20 @@ import {Text, StyleSheet, ScrollView, View} from 'react-native';
 import AuthHeader from '../components/AuthHeader';
 import CardAuth from '../components/CardAuth';
 import Container from '../components/Container';
-import PasswordField from '../components/PasswordField';
+import PinField from '../components/PinField';
 import Button from '../components/Button';
 
-class ResetPassword extends Component {
+class CreatePin extends Component {
+  state = {
+    pin: '',
+  };
+
+  handlePin = value => {
+    this.setState({
+      pin: value,
+    });
+  };
+
   render() {
     return (
       <Fragment>
@@ -19,23 +29,25 @@ class ResetPassword extends Component {
           <CardAuth>
             <Container width={90}>
               <View style={styles.header}>
-                <Text style={styles.title}>Reset Password</Text>
+                <Text style={styles.title}>Create Security PIN</Text>
                 <Text style={styles.subtitle}>
-                  Create and confirm your new password so you can login to
-                  Abusayap.
+                  Create a PIN that’s contain 6 digits number for security
+                  purpose in Abusayap.
                 </Text>
               </View>
               <View style={styles.form}>
                 <View style={styles.control}>
-                  <PasswordField placeholder="Enter your new password" />
-                </View>
-                <View style={styles.control}>
-                  <PasswordField placeholder="Confirm your new password" />
+                  <PinField
+                    value={this.state.pin}
+                    onChangeText={this.handlePin}
+                  />
                 </View>
                 <View style={[styles.control, styles.controlMargin]}>
                   <Button
-                    onPress={() => this.props.navigation.navigate('CreatePin')}>
-                    Reset Password
+                    onPress={() =>
+                      this.props.navigation.navigate('PinSuccess')
+                    }>
+                    Confirm
                   </Button>
                 </View>
               </View>
@@ -47,7 +59,7 @@ class ResetPassword extends Component {
   }
 }
 
-export default ResetPassword;
+export default CreatePin;
 
 const styles = StyleSheet.create({
   title: {
@@ -72,5 +84,6 @@ const styles = StyleSheet.create({
   },
   control: {
     marginBottom: 30,
+    alignItems: 'center',
   },
 });

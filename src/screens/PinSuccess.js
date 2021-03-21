@@ -7,37 +7,42 @@ import {Text, StyleSheet, ScrollView, View} from 'react-native';
 import AuthHeader from '../components/AuthHeader';
 import CardAuth from '../components/CardAuth';
 import Container from '../components/Container';
-import PasswordField from '../components/PasswordField';
 import Button from '../components/Button';
 
-class ResetPassword extends Component {
+// import all assest
+import Success from '../assets/images/success.svg';
+
+class CreatePin extends Component {
+  state = {
+    pin: '',
+  };
+
+  handlePin = value => {
+    this.setState({
+      pin: value,
+    });
+  };
+
   render() {
     return (
       <Fragment>
         <ScrollView>
-          <AuthHeader />
-          <CardAuth>
+          <AuthHeader big />
+          <CardAuth big>
             <Container width={90}>
+              <View style={styles.logo}>
+                <Success />
+              </View>
               <View style={styles.header}>
-                <Text style={styles.title}>Reset Password</Text>
+                <Text style={styles.title}>PIN Successfully Created</Text>
                 <Text style={styles.subtitle}>
-                  Create and confirm your new password so you can login to
-                  Abusayap.
+                  Your PIN was successfully created and you can now access all
+                  the features in Abusayap. Login to your new account and start
+                  exploring!
                 </Text>
               </View>
-              <View style={styles.form}>
-                <View style={styles.control}>
-                  <PasswordField placeholder="Enter your new password" />
-                </View>
-                <View style={styles.control}>
-                  <PasswordField placeholder="Confirm your new password" />
-                </View>
-                <View style={[styles.control, styles.controlMargin]}>
-                  <Button
-                    onPress={() => this.props.navigation.navigate('CreatePin')}>
-                    Reset Password
-                  </Button>
-                </View>
+              <View style={styles.control}>
+                <Button>Login Now</Button>
               </View>
             </Container>
           </CardAuth>
@@ -47,7 +52,7 @@ class ResetPassword extends Component {
   }
 }
 
-export default ResetPassword;
+export default CreatePin;
 
 const styles = StyleSheet.create({
   title: {
@@ -61,7 +66,7 @@ const styles = StyleSheet.create({
     color: '#989A9C',
     fontSize: 16,
     textAlign: 'center',
-    width: '89%',
+    width: '90%',
   },
   header: {
     marginBottom: 30,
@@ -71,6 +76,11 @@ const styles = StyleSheet.create({
     marginTop: 120,
   },
   control: {
+    marginTop: 50,
+    alignItems: 'center',
+  },
+  logo: {
+    alignItems: 'center',
     marginBottom: 30,
   },
 });

@@ -3,10 +3,10 @@
 import React, {Fragment} from 'react';
 import {Text, View, StyleSheet, Dimensions} from 'react-native';
 
-function AuthHeader(params) {
+function AuthHeader(props) {
   return (
     <Fragment>
-      <View style={styles.header}>
+      <View style={styles.header(props.big)}>
         <Text style={styles.title}>Abusayap</Text>
       </View>
     </Fragment>
@@ -14,11 +14,22 @@ function AuthHeader(params) {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    height: (25 / 100) * Dimensions.get('screen').height,
-    backgroundColor: '#FAFCFF',
-    justifyContent: 'center',
-    alignItems: 'center',
+  header: function (isBig) {
+    if (isBig) {
+      return {
+        height: (35 / 100) * Dimensions.get('screen').height,
+        backgroundColor: '#FAFCFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+      };
+    } else {
+      return {
+        height: (25 / 100) * Dimensions.get('screen').height,
+        backgroundColor: '#FAFCFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+      };
+    }
   },
   title: {
     fontSize: 23,
