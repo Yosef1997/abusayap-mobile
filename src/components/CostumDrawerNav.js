@@ -80,9 +80,9 @@ const style = StyleSheet.create({
     paddingBottom: 20,
   },
   background: {
-    backgroundColor: '#6379F4',
-    borderBottomStartRadius: 30,
-    borderBottomEndRadius: 30,
+    backgroundColor: '#00D16C',
+    // borderBottomStartRadius: 30,
+    // borderBottomEndRadius: 30,
     height: 150,
     paddingHorizontal: 20,
 
