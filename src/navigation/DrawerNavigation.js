@@ -16,16 +16,6 @@ function DrawerNavigation() {
   return (
     <Drawer.Navigator drawerContent={props => <CostumDrawerNav {...props} />}>
       <Drawer.Screen
-        name="Confirmation"
-        component={Confirmation}
-        options={{
-          headerShown: true,
-          header: () => (
-            <HeaderFlowTransaction title="Confirmation" rounded={false} />
-          ),
-        }}
-      />
-      <Drawer.Screen
         name="Auth"
         component={AuthStack}
         options={{swipeEnabled: false}}
@@ -48,6 +38,16 @@ function DrawerNavigation() {
           headerShown: true,
           header: () => (
             <HeaderFlowTransaction title="History" rounded={true} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Confirmation"
+        component={Confirmation}
+        options={{
+          headerShown: true,
+          header: () => (
+            <HeaderFlowTransaction title="Confirmation" rounded={false} />
           ),
         }}
       />
