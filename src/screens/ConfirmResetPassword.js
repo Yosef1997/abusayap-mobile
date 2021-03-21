@@ -1,0 +1,75 @@
+// ===== Register
+// import all modules
+import React, {Fragment, Component} from 'react';
+import {Text, StyleSheet, ScrollView, View} from 'react-native';
+
+// import all components
+import AuthHeader from '../components/AuthHeader';
+import CardAuth from '../components/CardAuth';
+import Container from '../components/Container';
+import EmailField from '../components/EmailField';
+import Button from '../components/Button';
+
+class ConfirmResetPassword extends Component {
+  render() {
+    return (
+      <Fragment>
+        <ScrollView>
+          <AuthHeader />
+          <CardAuth>
+            <Container width={90}>
+              <View style={styles.header}>
+                <Text style={styles.title}>Reset Password</Text>
+                <Text style={styles.subtitle}>
+                  Enter your Abusayap e-mail so we can send you a password reset
+                  link.
+                </Text>
+              </View>
+              <View style={styles.form}>
+                <View style={styles.control}>
+                  <EmailField placeholder="Enter your email" />
+                </View>
+                <View style={[styles.control, styles.controlMargin]}>
+                  <Button
+                    onPress={() =>
+                      this.props.navigation.navigate('ResetPassword')
+                    }>
+                    Confirm
+                  </Button>
+                </View>
+              </View>
+            </Container>
+          </CardAuth>
+        </ScrollView>
+      </Fragment>
+    );
+  }
+}
+
+export default ConfirmResetPassword;
+
+const styles = StyleSheet.create({
+  title: {
+    color: '#6B6E71',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  subtitle: {
+    color: '#989A9C',
+    fontSize: 16,
+    textAlign: 'center',
+    width: '89%',
+  },
+  header: {
+    marginBottom: 30,
+    alignItems: 'center',
+  },
+  controlMargin: {
+    marginTop: 120,
+  },
+  control: {
+    marginBottom: 30,
+  },
+});
