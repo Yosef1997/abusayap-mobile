@@ -17,7 +17,23 @@ import EmailField from '../components/EmailField';
 import PasswordField from '../components/PasswordField';
 import Button from '../components/Button';
 
+// Connect Redux
+import {connect} from 'react-redux';
+import {signin} from '../redux/actions/auth';
+
 class Login extends Component {
+  state = {
+    email: '',
+    password: '',
+  };
+  doLogin = async () => {
+    const {email, password} = this.state;
+    console.log(email, password);
+    await this.props.signin(email, password);
+    if (this.props.auth.token) {
+      this.props.navigation.navigate('Home');
+    }
+  };
   render() {
     return (
       <Fragment>
@@ -34,10 +50,16 @@ class Login extends Component {
               </View>
               <View style={styles.form}>
                 <View style={styles.control}>
-                  <EmailField placeholder="Enter your email" />
+                  <EmailField
+                    placeholder="Enter your email"
+                    onChangeText={email => this.setState({email})}
+                  />
                 </View>
                 <View style={styles.control}>
-                  <PasswordField placeholder="Enter your password" />
+                  <PasswordField
+                    placeholder="Enter your password"
+                    onChangeText={password => this.setState({password})}
+                  />
                 </View>
                 <TouchableOpacity
                   style={styles.control}
@@ -45,18 +67,17 @@ class Login extends Component {
                   <Text style={styles.forgot}>Forgot Password?</Text>
                 </TouchableOpacity>
                 <View style={styles.control}>
-                  <Button
-                    onPress={() => this.props.navigation.navigate('Register')}>
-                    Login
-                  </Button>
+                  <Button onPress={this.doLogin}>Login</Button>
                 </View>
               </View>
-              <View style={styles.footer}>
+              <TouchableOpacity
+                style={styles.footer}
+                onPress={() => this.props.navigation.navigate('Register')}>
                 <Text style={styles.textFoot}>
                   Don’t have an account? Let’s{' '}
                   <Text style={styles.link}>Sign Up</Text>
                 </Text>
-              </View>
+              </TouchableOpacity>
             </Container>
           </CardAuth>
         </ScrollView>
@@ -64,8 +85,6 @@ class Login extends Component {
     );
   }
 }
-
-export default Login;
 
 const styles = StyleSheet.create({
   title: {
@@ -104,3 +123,9 @@ const styles = StyleSheet.create({
     color: '#00D16C',
   },
 });
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+const mapDispatchToProps = {signin};
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

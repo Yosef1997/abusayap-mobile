@@ -9,7 +9,7 @@ function EmailField(props) {
     <Fragment>
       <SmoothPinCodeInput
         codeLength={6}
-        placeholder="*"
+        placeholder="_"
         cellStyle={styles.input}
         cellStyleFocused={styles.input}
         onTextChange={props.onChangeText}

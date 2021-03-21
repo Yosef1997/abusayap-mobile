@@ -10,9 +10,10 @@ import ChangePass from '../screens/ChangePass';
 import ChangePin from '../screens/ChangePin';
 import Addphone from '../screens/AddPhoneNumber';
 import ManagePhone from '../screens/MangePhoneNumber';
-
+import SearchReceiver from '../screens/SearchReceiver';
+import PinConfirm from '../screens/PinConfirm';
 import CostumDrawerNav from '../components/CostumDrawerNav';
-import LineIcon from 'react-native-vector-icons/SimpleLineIcons';
+// import LineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import TransactionDetail from '../screens/TransactionDetail';
 import HeaderFlowTransaction from '../components/HeaderFlowTransaction';
 import Confirmation from '../screens/Confirmation';
@@ -24,11 +25,31 @@ function DrawerNavigation() {
   return (
     <Drawer.Navigator drawerContent={props => <CostumDrawerNav {...props} />}>
       <Drawer.Screen
+        name="PinConfirm"
+        component={PinConfirm}
+        options={{
+          headerShown: true,
+          header: () => (
+            <HeaderFlowTransaction title="Enter Your PIN" rounded={true} />
+          ),
+        }}
+      />
+      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen
+        name="Search"
+        component={SearchReceiver}
+        options={{
+          headerShown: true,
+          header: () => (
+            <HeaderFlowTransaction title="Find Receiver" rounded={false} />
+          ),
+        }}
+      />
+      <Drawer.Screen
         name="Auth"
         component={AuthStack}
         options={{swipeEnabled: false}}
       />
-      <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen
         name="Transaction"
         component={TransactionDetail}

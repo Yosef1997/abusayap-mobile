@@ -46,12 +46,14 @@ class Register extends Component {
                   <Button>Sign Up</Button>
                 </View>
               </View>
-              <View style={styles.footer}>
+              <TouchableOpacity
+                style={styles.footer}
+                onPress={() => this.props.navigation.navigate('Login')}>
                 <Text style={styles.textFoot}>
                   Already have an account? Let’s{' '}
                   <Text style={styles.link}>Sign In</Text>
                 </Text>
-              </View>
+              </TouchableOpacity>
             </Container>
           </CardAuth>
         </ScrollView>

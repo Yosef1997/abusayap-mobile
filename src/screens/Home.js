@@ -37,11 +37,15 @@ const Home = () => {
       </MainHeader>
       <View style={style.mainBody}>
         <View style={style.rowBtn}>
-          <TouchableOpacity style={style.btnTransfer}>
+          <TouchableOpacity
+            style={style.btnTransfer}
+            onPress={() => navigation.navigate('Search')}>
             <Icon name="arrow-up" style={style.iconPlus} />
             <Text style={style.textBtn}>Transfer</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={style.btnTransfer}>
+          <TouchableOpacity
+            style={style.btnTransfer}
+            onPress={() => navigation.navigate('TopUp')}>
             <Icon name="plus" style={style.iconPlus} />
             <Text style={style.textBtn}>Top Up</Text>
           </TouchableOpacity>

@@ -38,7 +38,7 @@ export const signin = (email, password) => {
         type: 'SET_AUTH_MESSAGE',
         payload: '',
       });
-      const results = await http().post('/auth/sign-in', params);
+      const results = await http().post('/auth/login', params);
       const token = results.data.results.token;
       const user = jwt(token);
       dispatch({
