@@ -18,11 +18,6 @@ const Drawer = createDrawerNavigator();
 function DrawerNavigation() {
   return (
     <Drawer.Navigator drawerContent={props => <CostumDrawerNav {...props} />}>
-      <Drawer.Screen
-        name="Auth"
-        component={AuthStack}
-        options={{swipeEnabled: false}}
-      />
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="History" component={History} />
       <Drawer.Screen name="TopUp" component={TopUp} />
@@ -32,6 +27,11 @@ function DrawerNavigation() {
       <Drawer.Screen name="Addphone" component={Addphone} />
       <Drawer.Screen name="ManagePhone" component={ManagePhone} />
       <Drawer.Screen name="ChangePass" component={ChangePass} />
+      <Drawer.Screen
+        name="Auth"
+        component={AuthStack}
+        options={{swipeEnabled: false}}
+      />
     </Drawer.Navigator>
   );
 }
