@@ -14,14 +14,15 @@ import Icon from 'react-native-vector-icons/Feather';
 import {useSelector} from 'react-redux';
 import profile from '../assets/images/profile.jpg';
 import ListTransaction from '../components/ListTransaction';
+import MainHeader from '../components/MainHeader';
 
 const Home = () => {
   const navigation = useNavigation();
   const historyTransaction = useSelector(state => state.transaction.history);
   return (
     <>
-      <StatusBar backgroundColor="#6379F4" />
-      <View style={style.mainHeader}>
+      <StatusBar backgroundColor="#00D16C" />
+      <MainHeader>
         <View style={style.row}>
           <Image source={profile} style={style.photoProfile} />
           <View style={style.rowBalance}>
@@ -33,7 +34,7 @@ const Home = () => {
             <Icon name="bell" style={style.iconBell} />
           </Pressable>
         </View>
-      </View>
+      </MainHeader>
       <View style={style.mainBody}>
         <View style={style.rowBtn}>
           <TouchableOpacity style={style.btnTransfer}>
@@ -47,7 +48,9 @@ const Home = () => {
         </View>
         <View style={style.rowText}>
           <Text style={style.textBtn}>Transaction History</Text>
-          <Text style={style.textSeeAll}>See All</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Transaction')}>
+            <Text style={style.textSeeAll}>See All</Text>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={style.flatListWrapper}>
@@ -81,9 +84,9 @@ const style = StyleSheet.create({
   mainHeader: {
     height: 140,
     width: '100%',
-    backgroundColor: '#6379F4',
-    borderBottomStartRadius: 30,
-    borderBottomEndRadius: 30,
+    backgroundColor: '#00D16C',
+    borderBottomStartRadius: 20,
+    borderBottomEndRadius: 20,
     justifyContent: 'center',
     paddingHorizontal: 16,
   },
@@ -93,13 +96,14 @@ const style = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginVertical: 40,
   },
   rowBalance: {
     flex: 1,
   },
   textBalance: {
     fontSize: 14,
-    color: '#D0D0D0',
+    color: '#88888F',
   },
   textAmount: {
     fontSize: 24,
@@ -144,7 +148,7 @@ const style = StyleSheet.create({
   },
   textSeeAll: {
     fontSize: 14,
-    color: '#6379F4',
+    color: '#00D16C',
   },
   flatListWrapper: {
     flex: 1,

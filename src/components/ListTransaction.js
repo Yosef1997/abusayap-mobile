@@ -33,7 +33,7 @@ const style = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     marginVertical: 10,
-    borderRadius: 20,
+    borderRadius: 15,
   },
   wrapper: {
     flexDirection: 'row',

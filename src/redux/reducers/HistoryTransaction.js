@@ -12,6 +12,54 @@ const initialState = {
       isTransfer: false,
       amount: 'Rp. 20.000',
     },
+    {
+      id: 3,
+      name: 'Yosef Situmorang',
+      isTransfer: false,
+      amount: 'Rp. 20.000',
+    },
+    {
+      id: 4,
+      name: 'Yosef Situmorang',
+      isTransfer: false,
+      amount: 'Rp. 20.000',
+    },
+    {
+      id: 5,
+      name: 'Yosef Situmorang',
+      isTransfer: false,
+      amount: 'Rp. 20.000',
+    },
+    {
+      id: 6,
+      name: 'Yosef Situmorang',
+      isTransfer: false,
+      amount: 'Rp. 20.000',
+    },
+    {
+      id: 7,
+      name: 'Yosef Situmorang',
+      isTransfer: false,
+      amount: 'Rp. 20.000',
+    },
+    {
+      id: 8,
+      name: 'Yosef Situmorang',
+      isTransfer: false,
+      amount: 'Rp. 20.000',
+    },
+    {
+      id: 9,
+      name: 'Yosef Situmorang',
+      isTransfer: false,
+      amount: 'Rp. 20.000',
+    },
+    {
+      id: 10,
+      name: 'Yosef Situmorang',
+      isTransfer: false,
+      amount: 'Rp. 20.000',
+    },
   ],
 };
 
