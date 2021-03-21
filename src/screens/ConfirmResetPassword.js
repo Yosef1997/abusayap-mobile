@@ -1,23 +1,16 @@
 // ===== Register
 // import all modules
 import React, {Fragment, Component} from 'react';
-import {
-  Text,
-  StyleSheet,
-  ScrollView,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import {Text, StyleSheet, ScrollView, View} from 'react-native';
 
 // import all components
 import AuthHeader from '../components/AuthHeader';
 import CardAuth from '../components/CardAuth';
 import Container from '../components/Container';
 import EmailField from '../components/EmailField';
-import PasswordField from '../components/PasswordField';
 import Button from '../components/Button';
 
-class Login extends Component {
+class ConfirmResetPassword extends Component {
   render() {
     return (
       <Fragment>
@@ -26,36 +19,24 @@ class Login extends Component {
           <CardAuth>
             <Container width={90}>
               <View style={styles.header}>
-                <Text style={styles.title}>Login</Text>
+                <Text style={styles.title}>Reset Password</Text>
                 <Text style={styles.subtitle}>
-                  Login to your existing account to access all the features in
-                  Abusayap.
+                  Enter your Abusayap e-mail so we can send you a password reset
+                  link.
                 </Text>
               </View>
               <View style={styles.form}>
                 <View style={styles.control}>
                   <EmailField placeholder="Enter your email" />
                 </View>
-                <View style={styles.control}>
-                  <PasswordField placeholder="Enter your password" />
-                </View>
-                <TouchableOpacity
-                  style={styles.control}
-                  onPress={() => this.props.navigation.navigate('Confirm')}>
-                  <Text style={styles.forgot}>Forgot Password?</Text>
-                </TouchableOpacity>
-                <View style={styles.control}>
+                <View style={[styles.control, styles.controlMargin]}>
                   <Button
-                    onPress={() => this.props.navigation.navigate('Register')}>
-                    Login
+                    onPress={() =>
+                      this.props.navigation.navigate('ResetPassword')
+                    }>
+                    Confirm
                   </Button>
                 </View>
-              </View>
-              <View style={styles.footer}>
-                <Text style={styles.textFoot}>
-                  Don’t have an account? Let’s{' '}
-                  <Text style={styles.link}>Sign Up</Text>
-                </Text>
               </View>
             </Container>
           </CardAuth>
@@ -65,7 +46,7 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default ConfirmResetPassword;
 
 const styles = StyleSheet.create({
   title: {
@@ -85,22 +66,10 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     alignItems: 'center',
   },
-  form: {},
+  controlMargin: {
+    marginTop: 120,
+  },
   control: {
     marginBottom: 30,
-  },
-  forgot: {
-    marginTop: 5,
-    color: '#888B8E',
-    textAlign: 'right',
-  },
-  footer: {
-    marginTop: 15,
-  },
-  textFoot: {
-    textAlign: 'center',
-  },
-  link: {
-    color: '#00D16C',
   },
 });
