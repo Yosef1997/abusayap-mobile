@@ -1,24 +1,16 @@
 // ===== Register
 // import all modules
 import React, {Fragment, Component} from 'react';
-import {
-  Text,
-  StyleSheet,
-  ScrollView,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import {Text, StyleSheet, ScrollView, View} from 'react-native';
 
 // import all components
 import AuthHeader from '../components/AuthHeader';
 import CardAuth from '../components/CardAuth';
 import Container from '../components/Container';
-import EmailField from '../components/EmailField';
 import PasswordField from '../components/PasswordField';
-import UsernameField from '../components/UsernameField';
 import Button from '../components/Button';
 
-class Register extends Component {
+class ResetPassword extends Component {
   render() {
     return (
       <Fragment>
@@ -27,30 +19,25 @@ class Register extends Component {
           <CardAuth>
             <Container width={90}>
               <View style={styles.header}>
-                <Text style={styles.title}>Sign Up</Text>
+                <Text style={styles.title}>Reset Password</Text>
                 <Text style={styles.subtitle}>
-                  Create your account to access Abusayap.
+                  Create and confirm your new password so you can login to
+                  Abusayap.
                 </Text>
               </View>
               <View style={styles.form}>
                 <View style={styles.control}>
-                  <UsernameField placeholder="Enter your username" />
+                  <PasswordField placeholder="Enter your new password" />
                 </View>
                 <View style={styles.control}>
-                  <EmailField placeholder="Enter your email" />
+                  <PasswordField placeholder="Confirm your new password" />
                 </View>
-                <View style={styles.control}>
-                  <PasswordField placeholder="Enter your password" />
+                <View style={[styles.control, styles.controlMargin]}>
+                  <Button
+                    onPress={() => this.props.navigation.navigate('CreatePin')}>
+                    Reset Password
+                  </Button>
                 </View>
-                <View style={styles.control}>
-                  <Button>Sign Up</Button>
-                </View>
-              </View>
-              <View style={styles.footer}>
-                <Text style={styles.textFoot}>
-                  Already have an account? Let’s{' '}
-                  <Text style={styles.link}>Sign In</Text>
-                </Text>
               </View>
             </Container>
           </CardAuth>
@@ -60,7 +47,7 @@ class Register extends Component {
   }
 }
 
-export default Register;
+export default ResetPassword;
 
 const styles = StyleSheet.create({
   title: {
@@ -80,17 +67,10 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     alignItems: 'center',
   },
-  form: {},
+  controlMargin: {
+    marginTop: 120,
+  },
   control: {
     marginBottom: 30,
-  },
-  footer: {
-    marginTop: 15,
-  },
-  textFoot: {
-    textAlign: 'center',
-  },
-  link: {
-    color: '#00D16C',
   },
 });
