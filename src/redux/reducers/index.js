@@ -3,6 +3,8 @@ import {persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
 import authReducer from './auth';
+import transactionReducer from './HistoryTransaction';
+import profileReducer from './UpdateProfile';
 
 const authConfig = {
   key: 'auth',
@@ -12,6 +14,8 @@ const authConfig = {
 
 const reducer = combineReducers({
   auth: persistReducer(authConfig, authReducer),
+  transaction: transactionReducer,
+  profile: profileReducer,
 });
 
 export default reducer;
