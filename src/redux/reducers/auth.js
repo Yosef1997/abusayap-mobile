@@ -1,6 +1,6 @@
 const intialState = {
   token: null,
-  profile: [],
+  user: null,
   authMessage: '',
 };
 
@@ -10,11 +10,6 @@ const authReducer = (state = intialState, action) => {
       return {
         ...state,
         token: action.token,
-      };
-    case 'UPDATE_PROFILE':
-      return {
-        ...state,
-        profile: action.payload,
       };
     case 'SET_MESSAGE':
       return {

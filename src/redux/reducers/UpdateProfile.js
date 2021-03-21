@@ -1,5 +1,6 @@
 const initialState = {
   updateUser: null,
+  message: '',
   errorMsg: '',
 };
 
@@ -9,6 +10,12 @@ const updateReducer = (state = initialState, action) => {
       return {
         ...state,
         updateUser: action.payload,
+      };
+    }
+    case 'DELETE_PICTURE': {
+      return {
+        ...state,
+        message: action.payload,
       };
     }
     case 'SET_UPDATE_MESSAGE': {

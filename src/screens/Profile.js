@@ -48,9 +48,8 @@ class Profile extends Component {
           const data = new FormData();
           data.append('picture', dataImage);
           await this.props.updateUser(
-            // this.props.auth.token,
-            // this.props.auth.user.id
-            '28',
+            this.props.auth.token,
+            this.props.auth.user.id,
             data,
           );
           Alert(this.props.auth.message, 'success');
@@ -76,9 +75,8 @@ class Profile extends Component {
         const data = new FormData();
         data.append('picture', dataImage);
         await this.props.updateUser(
-          // this.props.auth.token,
-          // this.props.auth.user.id,
-          '28',
+          this.props.auth.token,
+          this.props.auth.user.id,
           data,
         );
         Alert(this.props.auth.message, 'success');
