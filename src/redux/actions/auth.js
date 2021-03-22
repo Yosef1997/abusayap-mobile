@@ -1,10 +1,10 @@
 import http from '../../helpers/http';
 import jwt from 'jwt-decode';
 
-export const signup = (name, email, password) => {
+export const signup = (username, email, password) => {
   return async dispatch => {
     const params = new URLSearchParams();
-    params.append('name', name);
+    params.append('username', username);
     params.append('email', email);
     params.append('password', password);
     try {

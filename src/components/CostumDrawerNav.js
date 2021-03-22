@@ -4,14 +4,15 @@ import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import LineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import profile from '../assets/images/profile.jpg';
 import {useDispatch, useSelector} from 'react-redux';
+import {signout} from '../redux/actions/auth';
 import {DrawerActions} from '@react-navigation/core';
 import {REACT_APP_API_URL as API_URL} from '@env';
 
 const CostumDrawerNav = props => {
   //   const profile = useSelector(state => state.auth.profile);
-  //   const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const handlePress = () => {
-    // dispatch(logout());
+    dispatch(signout());
     props.navigation.dispatch(DrawerActions.closeDrawer());
   };
   return (

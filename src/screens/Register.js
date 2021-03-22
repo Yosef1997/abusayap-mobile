@@ -22,13 +22,14 @@ import {signup} from '../redux/actions/auth';
 
 class Register extends Component {
   state = {
-    name: '',
+    username: '',
     email: '',
     password: '',
   };
   doRegister = async () => {
-    const {name, email, password} = this.state;
-    await this.props.signup(name, email, password);
+    const {username, email, password} = this.state;
+    console.log(username, email, password);
+    await this.props.signup(username, email, password);
     if (this.props.auth.authMessage !== '') {
       this.props.navigation.navigate('Login');
     }
@@ -50,7 +51,7 @@ class Register extends Component {
                 <View style={styles.control}>
                   <UsernameField
                     placeholder="Enter your username"
-                    onChangeText={name => this.setState({name})}
+                    onChangeText={username => this.setState({username})}
                   />
                 </View>
                 <View style={styles.control}>
@@ -62,14 +63,12 @@ class Register extends Component {
                 <View style={styles.control}>
                   <PasswordField
                     placeholder="Enter your password"
-                    onChangeText={email => this.setState({email})}
+                    onChangeText={password => this.setState({password})}
                   />
                 </View>
-                <TouchableOpacity
-                  style={styles.control}
-                  onPress={this.doRegister}>
-                  <Button>Sign Up</Button>
-                </TouchableOpacity>
+                <View style={styles.control}>
+                  <Button onPress={this.doRegister}>Sign Up</Button>
+                </View>
               </View>
               <TouchableOpacity
                 style={styles.footer}
