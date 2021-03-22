@@ -15,7 +15,7 @@ export const signup = (name, email, password) => {
       const results = await http().post('/auth/sign-up', params);
       dispatch({
         type: 'SIGN_UP',
-        payload: results.data.result,
+        payload: results.data.message,
       });
     } catch (err) {
       console.log(err);
