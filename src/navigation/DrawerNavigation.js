@@ -25,6 +25,12 @@ function DrawerNavigation() {
   return (
     <Drawer.Navigator drawerContent={props => <CostumDrawerNav {...props} />}>
       <Drawer.Screen
+        name="Auth"
+        component={AuthStack}
+        options={{swipeEnabled: false}}
+      />
+      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen
         name="PinConfirm"
         component={PinConfirm}
         options={{
@@ -34,7 +40,6 @@ function DrawerNavigation() {
           ),
         }}
       />
-      <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen
         name="Search"
         component={SearchReceiver}
@@ -44,11 +49,6 @@ function DrawerNavigation() {
             <HeaderFlowTransaction title="Find Receiver" rounded={false} />
           ),
         }}
-      />
-      <Drawer.Screen
-        name="Auth"
-        component={AuthStack}
-        options={{swipeEnabled: false}}
       />
       <Drawer.Screen
         name="Transaction"

@@ -9,10 +9,12 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Card from '../components/CardPersonalInfo';
-// import {connect} from 'react-redux';
+import {connect} from 'react-redux';
+import {updateUser} from '../redux/actions/UpdateProfile';
 
-export default class PersonalInfo extends Component {
+class PersonalInfo extends Component {
   render() {
+    const {user} = this.props.auth;
     return (
       <ScrollView style={styles.container}>
         <StatusBar backgroundColor="#00D16C" />
@@ -29,34 +31,37 @@ export default class PersonalInfo extends Component {
         </Text>
         <Card
           label="First Name"
-          text="John"
+          text={user.firstname}
           textPersonal={styles.textPersonal}
         />
         <Card
           label="Last Name"
-          text="Cena"
+          text={user.lastname}
           textPersonal={styles.textPersonal}
         />
         <Card
           label="Verified E-mail"
-          text="pewdiepie1@gmail.com"
+          text={user.email}
           textPersonal={styles.textPersonal}
         />
-        <Card
-          label="Phone Number"
-          text="+62 813-9387-7946"
-          textPersonal={styles.textPersonal}
-          manage="manage"
-          onPress={() => this.props.navigation.navigate('ManagePhone')}
-        />
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('Addphone')}>
+        {user.phoneNumber !== null ? (
           <Card
             label="Phone Number"
-            text="Add Phone Number"
-            textPersonal={styles.textAddNumber}
+            text={`+62 ${user.phoneNumber}`}
+            textPersonal={styles.textPersonal}
+            manage="manage"
+            onPress={() => this.props.navigation.navigate('ManagePhone')}
           />
-        </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Addphone')}>
+            <Card
+              label="Phone Number"
+              text="Add Phone Number"
+              textPersonal={styles.textAddNumber}
+            />
+          </TouchableOpacity>
+        )}
       </ScrollView>
     );
   }
@@ -105,8 +110,8 @@ const styles = StyleSheet.create({
 });
 
 //Connect Redux
-// const mapStateToProps =(state) => ({
-//   auth:state.auth
-// })
-// const mapDispatchToProps = {}
-// export default connect(mapStateToProps, mapDispatchToProps)(PersonalInfo)
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+const mapDispatchToProps = {updateUser};
+export default connect(mapStateToProps, mapDispatchToProps)(PersonalInfo);

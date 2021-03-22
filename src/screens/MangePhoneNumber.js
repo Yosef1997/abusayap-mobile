@@ -9,9 +9,12 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Card from '../components/CardPersonalInfo';
+import {connect} from 'react-redux';
+import {updateUser} from '../redux/actions/UpdateProfile';
 
-export default class MangePhoneNumber extends Component {
+class MangePhoneNumber extends Component {
   render() {
+    const {user} = this.props.auth;
     return (
       <ScrollView style={styles.container}>
         <StatusBar backgroundColor="#00D16C" />
@@ -28,7 +31,7 @@ export default class MangePhoneNumber extends Component {
         </Text>
         <Card
           label="Primary"
-          text="+62 813 9387 7946"
+          text={`+62 ${user.phoneNumber}`}
           textPersonal={styles.textPersonal}
           name="trash"
           size={25}
@@ -74,3 +77,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+const mapDispatchToProps = {updateUser};
+export default connect(mapStateToProps, mapDispatchToProps)(MangePhoneNumber);

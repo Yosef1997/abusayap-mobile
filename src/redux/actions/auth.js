@@ -56,3 +56,7 @@ export const signin = (email, password) => {
     }
   };
 };
+
+export const signout = () => ({
+  type: 'SIGNOUT',
+});
