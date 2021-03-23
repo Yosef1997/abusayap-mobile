@@ -1,7 +1,18 @@
 // ===== Register
 // import all modules
 import React, {Fragment, Component} from 'react';
-import {Text, StyleSheet, ScrollView, View} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  ScrollView,
+  View,
+  ActivityIndicator,
+} from 'react-native';
+import {connect} from 'react-redux';
+import http from '../helpers/http';
+
+// import actions
+import {setId} from '../redux/actions/auth';
 
 // import all components
 import AuthHeader from '../components/AuthHeader';
@@ -11,6 +22,80 @@ import EmailField from '../components/EmailField';
 import Button from '../components/Button';
 
 class ConfirmResetPassword extends Component {
+  state = {
+    message: "Email can't be empty",
+    email: null,
+    submit: false,
+    loading: false,
+    type: 'warning',
+  };
+
+  handleSubmit = async () => {
+    this.setState({
+      loading: true,
+    });
+    try {
+      const formData = new URLSearchParams();
+      formData.append('email', this.state.email);
+      const {data} = await http(null).post(
+        'auth/forgotPasswordMobile',
+        formData,
+      );
+      this.props.setId(data.results.id);
+      this.setState({
+        loading: false,
+      });
+      this.setState({
+        message: data.message,
+        submit: true,
+        type: 'primary',
+      });
+    } catch (err) {
+      console.log(err);
+      this.setState({
+        loading: false,
+      });
+      this.setState({
+        message: err.response.data.message,
+        submit: true,
+        type: 'warning',
+      });
+    }
+  };
+
+  handleInput = value => {
+    const isEmail = value.match(/[^@$a-z0-9.]/gi);
+
+    if (!value) {
+      this.setState({
+        message: "Email can't be empty",
+        submit: false,
+        type: 'warning',
+      });
+    } else if (
+      isEmail ||
+      !value.match(/@\b/g) ||
+      value.match(/\s/) ||
+      !value.split('@').pop().includes('.')
+    ) {
+      this.setState({
+        message: 'Invalid Email',
+        submit: false,
+        type: 'warning',
+      });
+    } else {
+      this.setState({
+        message: null,
+        submit: true,
+        type: 'warning',
+      });
+    }
+
+    this.setState({
+      email: value,
+    });
+  };
+
   render() {
     return (
       <Fragment>
@@ -27,15 +112,27 @@ class ConfirmResetPassword extends Component {
               </View>
               <View style={styles.form}>
                 <View style={styles.control}>
-                  <EmailField placeholder="Enter your email" />
+                  <EmailField
+                    placeholder="Enter your email"
+                    value={this.state.email}
+                    onChangeText={this.handleInput}
+                  />
+                  {this.state.message && (
+                    <Text style={[styles.alert, styles[this.state.type]]}>
+                      {this.state.message}
+                    </Text>
+                  )}
                 </View>
                 <View style={[styles.control, styles.controlMargin]}>
-                  <Button
-                    onPress={() =>
-                      this.props.navigation.navigate('ResetPassword')
-                    }>
-                    Confirm
-                  </Button>
+                  {this.state.loading ? (
+                    <ActivityIndicator color="#00D16C" size="large" />
+                  ) : (
+                    <Button
+                      disabled={!this.state.submit ? true : false}
+                      onPress={this.handleSubmit}>
+                      Confirm
+                    </Button>
+                  )}
                 </View>
               </View>
             </Container>
@@ -46,7 +143,9 @@ class ConfirmResetPassword extends Component {
   }
 }
 
-export default ConfirmResetPassword;
+const mapDispatchToProps = {setId};
+
+export default connect(null, mapDispatchToProps)(ConfirmResetPassword);
 
 const styles = StyleSheet.create({
   title: {
@@ -71,5 +170,14 @@ const styles = StyleSheet.create({
   },
   control: {
     marginBottom: 30,
+  },
+  alert: {
+    marginTop: 15,
+  },
+  primary: {
+    color: '#00D16C',
+  },
+  warning: {
+    color: '#FFC107',
   },
 });

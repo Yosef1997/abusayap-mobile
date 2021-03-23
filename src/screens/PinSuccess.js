@@ -11,6 +11,7 @@ import Button from '../components/Button';
 
 // import all assest
 import Success from '../assets/images/success.svg';
+import Failed from '../assets/images/failed.svg';
 
 class CreatePin extends Component {
   state = {
@@ -23,6 +24,10 @@ class CreatePin extends Component {
     });
   };
 
+  handlePush = screen => {
+    this.props.navigation.navigate(screen);
+  };
+
   render() {
     return (
       <Fragment>
@@ -31,18 +36,26 @@ class CreatePin extends Component {
           <CardAuth big>
             <Container width={90}>
               <View style={styles.logo}>
-                <Success />
+                {this.props.route.params.success ? <Success /> : <Failed />}
               </View>
               <View style={styles.header}>
-                <Text style={styles.title}>PIN Successfully Created</Text>
+                <Text style={styles.title}>
+                  {this.props.route.params.title}
+                </Text>
                 <Text style={styles.subtitle}>
-                  Your PIN was successfully created and you can now access all
-                  the features in Abusayap. Login to your new account and start
-                  exploring!
+                  {this.props.route.params.message}
                 </Text>
               </View>
               <View style={styles.control}>
-                <Button>Login Now</Button>
+                {this.props.route.params.success ? (
+                  <Button onPress={() => this.handlePush('Login')}>
+                    Login Now
+                  </Button>
+                ) : (
+                  <Button onPress={() => this.handlePush('CreatePin')}>
+                    Retry Now
+                  </Button>
+                )}
               </View>
             </Container>
           </CardAuth>

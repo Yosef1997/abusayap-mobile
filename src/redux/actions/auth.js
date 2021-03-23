@@ -3,26 +3,39 @@ import jwt from 'jwt-decode';
 
 export const signup = (username, email, password) => {
   return async dispatch => {
+    dispatch({
+      type: 'SET_LOADING',
+    });
     const params = new URLSearchParams();
     params.append('username', username);
     params.append('email', email);
     params.append('password', password);
     try {
-      dispatch({
-        type: 'SET_AUTH_MESSAGE',
-        payload: '',
-      });
       const results = await http().post('/auth/sign-up', params);
       dispatch({
-        type: 'SIGN_UP',
-        payload: results.data.message,
+        type: 'REMOVE_MESSAGE',
+      });
+      dispatch({
+        type: 'SET_ID',
+        payload: {
+          id: results.data.results.id,
+        },
+      });
+      dispatch({
+        type: 'SET_LOADING',
       });
     } catch (err) {
       console.log(err);
       const {message} = err.response.data;
       dispatch({
-        type: 'SET_AUTH_MESSAGE',
-        payload: message,
+        type: 'SET_LOADING',
+      });
+      dispatch({
+        type: 'SET_MESSAGE',
+        payload: {
+          message,
+          type: 'warning',
+        },
       });
     }
   };
@@ -30,28 +43,39 @@ export const signup = (username, email, password) => {
 
 export const signin = (email, password) => {
   return async dispatch => {
+    dispatch({
+      type: 'SET_LOADING',
+    });
     const params = new URLSearchParams();
     params.append('email', email);
     params.append('password', password);
     try {
-      dispatch({
-        type: 'SET_AUTH_MESSAGE',
-        payload: '',
-      });
       const results = await http().post('/auth/login', params);
       const token = results.data.results.token;
       const user = jwt(token);
+      dispatch({
+        type: 'REMOVE_MESSAGE',
+      });
       dispatch({
         type: 'SIGN_IN',
         payload: token,
         user: user,
       });
+      dispatch({
+        type: 'SET_LOADING',
+      });
     } catch (err) {
       console.log(err);
       const {message} = err.response.data;
       dispatch({
-        type: 'SET_AUTH_MESSAGE',
-        payload: message,
+        type: 'SET_LOADING',
+      });
+      dispatch({
+        type: 'SET_MESSAGE',
+        payload: {
+          message,
+          type: 'warning',
+        },
       });
     }
   };
@@ -59,4 +83,9 @@ export const signin = (email, password) => {
 
 export const signout = () => ({
   type: 'SIGNOUT',
+});
+
+export const setId = id => ({
+  type: 'SET_ID',
+  payload: {id},
 });
