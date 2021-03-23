@@ -13,16 +13,9 @@ import Icon from 'react-native-vector-icons/AntDesign';
 export default class App extends Component {
   render() {
     return (
-      <ScrollView style={styles.container}>
+      <>
         <StatusBar backgroundColor="#00D16C" />
         <View style={styles.header}>
-          <View style={styles.row1}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Home')}>
-              <Icon name="arrowleft" size={25} color="white" />
-            </TouchableOpacity>
-            <Text style={styles.textheader}>Top Up</Text>
-          </View>
           <View style={styles.row2}>
             <TouchableOpacity style={styles.btn}>
               <Icon name="plus" size={25} color="#00D16C" />
@@ -33,53 +26,55 @@ export default class App extends Component {
             </View>
           </View>
         </View>
-        <View style={styles.contain}>
-          <Text style={styles.cardtitle}>How to Top-Up</Text>
-          <View style={styles.card}>
-            <Text style={styles.cardNumber}>1</Text>
-            <Text style={styles.cardText}>
-              Go to the nearest ATM or you can{'\n'}use E-Banking.
-            </Text>
+        <ScrollView style={styles.container}>
+          <View style={styles.contain}>
+            <Text style={styles.cardtitle}>How to Top-Up</Text>
+            <View style={styles.card}>
+              <Text style={styles.cardNumber}>1</Text>
+              <Text style={styles.cardText}>
+                Go to the nearest ATM or you can{'\n'}use E-Banking.
+              </Text>
+            </View>
+            <View style={styles.card}>
+              <Text style={styles.cardNumber}>2</Text>
+              <Text style={styles.cardText}>
+                Type your security number on the{'\n'}ATM or E-Banking.
+              </Text>
+            </View>
+            <View style={styles.card}>
+              <Text style={styles.cardNumber}>3</Text>
+              <Text style={styles.cardText}>Select “Transfer” in the menu</Text>
+            </View>
+            <View style={styles.card}>
+              <Text style={styles.cardNumber}>4</Text>
+              <Text style={styles.cardText}>
+                Type the virtual account number that{'\n'}
+                we provide you at the top.
+              </Text>
+            </View>
+            <View style={styles.card}>
+              <Text style={styles.cardNumber}>5</Text>
+              <Text style={styles.cardText}>
+                Type the amount of the money you{'\n'}want to top up.
+              </Text>
+            </View>
+            <View style={styles.card}>
+              <Text style={styles.cardNumber}>6</Text>
+              <Text style={styles.cardText}>Read the summary details</Text>
+            </View>
+            <View style={styles.card}>
+              <Text style={styles.cardNumber}>7</Text>
+              <Text style={styles.cardText}>Press transfer / top up</Text>
+            </View>
+            <View style={styles.card}>
+              <Text style={styles.cardNumber}>8</Text>
+              <Text style={styles.cardText}>
+                You can see your money in Zwallet{'\n'}within 3 hours.
+              </Text>
+            </View>
           </View>
-          <View style={styles.card}>
-            <Text style={styles.cardNumber}>2</Text>
-            <Text style={styles.cardText}>
-              Type your security number on the{'\n'}ATM or E-Banking.
-            </Text>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.cardNumber}>3</Text>
-            <Text style={styles.cardText}>Select “Transfer” in the menu</Text>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.cardNumber}>4</Text>
-            <Text style={styles.cardText}>
-              Type the virtual account number that{'\n'}
-              we provide you at the top.
-            </Text>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.cardNumber}>5</Text>
-            <Text style={styles.cardText}>
-              Type the amount of the money you{'\n'}want to top up.
-            </Text>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.cardNumber}>6</Text>
-            <Text style={styles.cardText}>Read the summary details</Text>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.cardNumber}>7</Text>
-            <Text style={styles.cardText}>Press transfer / top up</Text>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.cardNumber}>8</Text>
-            <Text style={styles.cardText}>
-              You can see your money in Zwallet{'\n'}within 3 hours.
-            </Text>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </>
     );
   }
 }
@@ -108,7 +103,7 @@ const styles = StyleSheet.create({
   row2: {
     backgroundColor: 'white',
     marginHorizontal: 16,
-    marginTop: 40,
+    marginTop: 20,
     marginBottom: 20,
     flexDirection: 'row',
     alignItems: 'center',

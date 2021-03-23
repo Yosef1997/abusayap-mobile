@@ -24,6 +24,12 @@ const Drawer = createDrawerNavigator();
 function DrawerNavigation() {
   return (
     <Drawer.Navigator drawerContent={props => <CostumDrawerNav {...props} />}>
+      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen
+        name="Auth"
+        component={AuthStack}
+        options={{swipeEnabled: false}}
+      />
       <Drawer.Screen
         name="PinConfirm"
         component={PinConfirm}
@@ -34,7 +40,6 @@ function DrawerNavigation() {
           ),
         }}
       />
-      <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen
         name="Search"
         component={SearchReceiver}
@@ -45,11 +50,7 @@ function DrawerNavigation() {
           ),
         }}
       />
-      <Drawer.Screen
-        name="Auth"
-        component={AuthStack}
-        options={{swipeEnabled: false}}
-      />
+
       <Drawer.Screen
         name="Transaction"
         component={TransactionDetail}
@@ -87,7 +88,16 @@ function DrawerNavigation() {
           headerShown: false,
         }}
       />
-      <Drawer.Screen name="TopUp" component={TopUp} />
+      <Drawer.Screen
+        name="TopUp"
+        component={TopUp}
+        options={{
+          headerShown: true,
+          header: () => (
+            <HeaderFlowTransaction title="Top Up" rounded={false} />
+          ),
+        }}
+      />
       <Drawer.Screen name="Profile" component={Profile} />
       <Drawer.Screen name="PersonalInfo" component={PersonalInfo} />
       <Drawer.Screen name="ChangePin" component={ChangePin} />
