@@ -15,6 +15,11 @@ const authReducer = (state = intialState, action) => {
         token: action.payload,
         user: action.user,
       };
+    case 'SET_USER':
+      return {
+        ...state,
+        user: action.user,
+      };
     case 'UPDATE_USER':
       return {
         ...state,
@@ -35,7 +40,7 @@ const authReducer = (state = intialState, action) => {
     case 'SET_MESSAGE':
       return {
         ...state,
-        errMessage: action.payload.message,
+        errorMessage: action.payload.message,
         alertType: action.payload.type,
       };
     case 'SET_AUTH_MESSAGE':
@@ -48,7 +53,7 @@ const authReducer = (state = intialState, action) => {
       return {
         ...state,
         authMessage: null,
-        errMessage: null,
+        errorMessage: null,
         alertType: 'warning',
       };
     case 'SET_ID':

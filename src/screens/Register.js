@@ -36,7 +36,7 @@ class Register extends Component {
     console.log(username, email, password);
     try {
       await this.props.signup(username, email, password);
-      if (this.props.auth.authMessage !== '') {
+      if (!this.props.auth.authMessage && !this.props.auth.errorMessage) {
         this.props.navigation.navigate('CreatePin');
       }
     } catch (err) {
@@ -153,7 +153,7 @@ class Register extends Component {
                     </Text>
                   )}
                   {(this.props.auth.authMessage ||
-                    this.props.auth.errMessage) && (
+                    this.props.auth.errorMessage) && (
                     <Text
                       style={[
                         styles.alert,
@@ -161,7 +161,7 @@ class Register extends Component {
                         styles[this.props.auth.alertType],
                       ]}>
                       {this.props.auth.authMessage ||
-                        this.props.auth.errMessage}
+                        this.props.auth.errorMessage}
                     </Text>
                   )}
                 </View>

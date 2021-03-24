@@ -90,3 +90,26 @@ export const setId = id => ({
   type: 'SET_ID',
   payload: {id},
 });
+
+export const getUserDetail = (token, id) => {
+  return async dispatch => {
+    try {
+      const {data} = await http(token).get('/user/' + id);
+      dispatch({
+        type: 'SET_AUTH_MESSAGE',
+        authMessage: data.message,
+        alertType: 'primary',
+      });
+      dispatch({
+        type: 'SET_USER',
+        user: data.results,
+      });
+    } catch (err) {
+      dispatch({
+        type: 'SET_MESSAGE',
+        errMessage: err.data.response.message,
+        alertType: 'warning',
+      });
+    }
+  };
+};
