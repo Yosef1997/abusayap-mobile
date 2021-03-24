@@ -2,6 +2,8 @@
 // import all modules
 import React, {Fragment} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
+import {useSelector} from 'react-redux';
+import {REACT_APP_API_URL as API_URL} from '@env';
 
 // import assets
 import photo from '../assets/images/profile.jpg';
@@ -9,17 +11,32 @@ import photo from '../assets/images/profile.jpg';
 import Container from '../components/Container';
 
 export default function UserCard(props) {
+  const transactionFocus = useSelector(state => state.transaction.contactFocus);
   return (
     <Fragment>
       <View style={styles.card}>
         <Container width={80}>
           <View style={styles.container}>
             <View style={styles.firstCol}>
-              <Image source={photo} style={styles.picture} />
+              {transactionFocus.picture === null ? (
+                <Image source={photo} style={styles.picture} />
+              ) : (
+                <Image
+                  source={{
+                    uri: `${API_URL}/upload/profile/${transactionFocus.picture}`,
+                  }}
+                  style={styles.picture}
+                />
+              )}
             </View>
             <View style={styles.lastCol}>
-              <Text style={styles.title}>Samuel Suhi</Text>
-              <Text style={styles.subtitle}>+62 813-8492-9994</Text>
+              <Text style={styles.title}>{transactionFocus.name}</Text>
+              <Text style={styles.subtitle}>
+                +62{' '}
+                {transactionFocus.phoneNumber === null
+                  ? transactionFocus.email
+                  : transactionFocus.phoneNumber}
+              </Text>
             </View>
           </View>
         </Container>
