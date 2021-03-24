@@ -20,6 +20,7 @@ import {
   newHistoryTransaction,
   pageInfoHistoryTransaction,
 } from '../redux/actions/transaction';
+import Chart from '../components/Chart';
 
 const TransactionDetail = () => {
   const navigation = useNavigation();
@@ -102,7 +103,7 @@ const TransactionDetail = () => {
       <View style={style.mainBodyWrapper}>
         <Text style={style.title}>In This Week</Text>
         <View>
-          <Text>Chart</Text>
+          <Chart />
         </View>
         <View style={style.rowTitle}>
           <Text style={style.title}>Transaction History</Text>

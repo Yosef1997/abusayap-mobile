@@ -18,20 +18,37 @@ const authReducer = (state = intialState, action) => {
         token: action.payload,
         user: action.user,
       };
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+        },
+        authMessage: action.message,
+      };
+    case 'DELETE_PICTURE':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+        },
+      };
     case 'SET_MESSAGE':
       return {
         ...state,
         errorMsg: action.payload,
+        authMessage: '',
       };
     case 'SIGNOUT':
       return {
         ...state,
         token: null,
-        user: null,
         authMessage: '',
       };
     default:
-      return state;
+      return {...state};
   }
 };
 
