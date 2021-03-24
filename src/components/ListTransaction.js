@@ -4,6 +4,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import profile from '../assets/images/profile.jpg';
 import rupiah from '../helpers/rupiah';
 import moment from 'moment';
+import {REACT_APP_API_URL as API_URL} from '@env';
 
 const ListTransaction = props => {
   const amount = props.amount;
@@ -14,7 +15,10 @@ const ListTransaction = props => {
         {props.picture === null ? (
           <Image source={profile} style={style.photoProfile} />
         ) : (
-          <Image source={{uri: props.picture}} style={style.photoProfile} />
+          <Image
+            source={{uri: `${API_URL}/upload/profile/${props.picture}`}}
+            style={style.photoProfile}
+          />
         )}
         <View style={style.rowName}>
           <Text style={style.textName}>{props.name}</Text>
@@ -32,8 +36,8 @@ const ListTransaction = props => {
               : style.textAmountSubcription
           }>
           {props.isTransfer === 'receiver'
-            ? `+${ConvertRupiah}`
-            : `-${ConvertRupiah}`}
+            ? `+Rp${ConvertRupiah}`
+            : `-Rp${ConvertRupiah}`}
         </Text>
       </View>
     </TouchableOpacity>
