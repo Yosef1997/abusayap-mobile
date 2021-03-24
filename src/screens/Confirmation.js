@@ -2,23 +2,20 @@ import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import MainHeader from '../components/MainHeader';
 import UserCard from '../components/UserCard';
 import rupiah from '../helpers/rupiah';
 import moment from 'moment';
-import {sendAmount} from '../redux/actions/transaction';
 
 const Confirmation = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
   const transactionInfo = useSelector(
     state => state.transaction.transactionInfo,
   );
-  const token = useSelector(state => state.auth.token);
   const balanceSelf = useSelector(state => state.auth.user);
   const handlePress = () => {
-    dispatch(sendAmount(token, transactionInfo));
+    navigation.navigate('PinConfirm');
   };
   return (
     <>
