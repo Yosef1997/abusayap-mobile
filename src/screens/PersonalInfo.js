@@ -27,51 +27,48 @@ class PersonalInfo extends Component {
             <Text style={styles.textheader}>Personal Information</Text>
           </View>
         </View>
-
         <ScrollView style={styles.container}>
-         <View style={styles.wrapperText}>
-        <Text style={styles.text}>
-          We got your personal information from the sign up proccess. If you
-          want to make changes on your information, contact our support.
-        </Text>
-        <Card
-          label="First Name"
-          text={user.firstname}
-          textPersonal={styles.textPersonal}
-        />
-        <Card
-          label="Last Name"
-          text={user.lastname}
-          textPersonal={styles.textPersonal}
-        />
-        <Card
-          label="Verified E-mail"
-          text={user.email}
-          textPersonal={styles.textPersonal}
-        />
-        {user.phoneNumber !== null ? (
+          <View style={styles.wrapperText}>
+            <Text style={styles.text}>
+              We got your personal information from the sign up proccess. If you
+              want to make changes on your information, contact our support.
+            </Text>
+          </View>
           <Card
-            label="Phone Number"
-            text={`+62 ${user.phoneNumber}`}
+            label="First Name"
+            text={user.firstname}
             textPersonal={styles.textPersonal}
-            manage="manage"
-            onPress={() => this.props.navigation.navigate('ManagePhone')}
           />
-
-        ) : (
-
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Addphone')}>
+          <Card
+            label="Last Name"
+            text={user.lastname}
+            textPersonal={styles.textPersonal}
+          />
+          <Card
+            label="Verified E-mail"
+            text={user.email}
+            textPersonal={styles.textPersonal}
+          />
+          {user.phoneNumber !== null ? (
             <Card
               label="Phone Number"
-              text="Add Phone Number"
-              textPersonal={styles.textAddNumber}
+              text={`+62 ${user.phoneNumber}`}
+              textPersonal={styles.textPersonal}
+              manage="manage"
+              onPress={() => this.props.navigation.navigate('ManagePhone')}
             />
-          </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Addphone')}>
+              <Card
+                label="Phone Number"
+                text="Add Phone Number"
+                textPersonal={styles.textAddNumber}
+              />
+            </TouchableOpacity>
           )}
         </ScrollView>
       </>
-
     );
   }
 }
