@@ -35,6 +35,7 @@ function AuthStack(props) {
         <Stack.Screen
           component={ResetPassword}
           name="ResetPassword"
+          path="reset"
           options={{headerShown: false}}
         />
         <Stack.Screen
