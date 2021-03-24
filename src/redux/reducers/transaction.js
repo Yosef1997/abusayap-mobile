@@ -6,6 +6,7 @@ const initialState = {
   transactionInfo: null,
   isLoading: false,
   messageResponse: null,
+  topUpMessage: null,
 };
 
 const transactionReducer = (state = initialState, action) => {
@@ -39,6 +40,16 @@ const transactionReducer = (state = initialState, action) => {
       return {
         ...state,
         contactFocus: action.payload,
+      };
+    case 'TOPUP_MESSAGE':
+      return {
+        ...state,
+        topUpMessage: action.payload,
+      };
+    case 'TOP_UP':
+      return {
+        ...state,
+        topUpMessage: action.payload,
       };
     case 'TRANSACTION_INFO':
       return {

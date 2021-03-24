@@ -68,6 +68,33 @@ export const contactFocus = data => {
   };
 };
 
+export const topUp = (token, data) => {
+  return async dispatch => {
+    try {
+      const form = new FormData();
+      Object.keys(data).forEach(key => {
+        form.append(key, data[key]);
+      });
+      console.log(form);
+      dispatch({
+        type: 'TOPUP_MESSAGE',
+        payload: '',
+      });
+      const response = await http(token).post('/topup', form);
+      dispatch({
+        type: 'TOP_UP',
+        payload: response.data.message,
+      });
+    } catch (err) {
+      // console.log(err);
+      const {message} = err.response.data;
+      dispatch({
+        type: 'TOPUP_MESSAGE',
+        payload: message,
+      });
+    }
+  };
+};
 export const transactionInfo = data => {
   return async dispatch => {
     dispatch({

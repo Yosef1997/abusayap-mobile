@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Text, View, ScrollView, StatusBar, StyleSheet} from 'react-native';
 import PinField from '../components/PinField';
 import Button from '../components/Button';
+import Chart from '../components/Chart';
 
 export default class PinConfirm extends Component {
   render() {
@@ -18,6 +19,9 @@ export default class PinConfirm extends Component {
         </View>
         <View style={styles.btn}>
           <Button>Transfer Now</Button>
+        </View>
+        <View>
+          <Chart />
         </View>
       </ScrollView>
     );
