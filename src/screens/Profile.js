@@ -15,18 +15,17 @@ import ProfilImg from '../assets/images/profile.jpg';
 import Card from '../components/CardProfile';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import {connect} from 'react-redux';
-import {updateUser} from '../redux/actions/UpdateProfile';
-// import {REACT_APP_API_URL as API_URL} from '@env';
+import {updateUser, deletePicture} from '../redux/actions/UpdateProfile';
+import {REACT_APP_API_URL as API_URL} from '@env';
 
 class Profile extends Component {
   state = {
     modalVisible: false,
   };
-
   setModalVisible = visible => {
     this.setState({modalVisible: visible});
   };
-  addPhotoCamera = () => {
+  addPhotoCamera = async () => {
     this.setState({modalVisible: false});
     launchCamera(
       {
@@ -45,19 +44,17 @@ class Profile extends Component {
             type: response.type,
             name: response.fileName,
           };
-          const data = new FormData();
-          data.append('picture', dataImage);
           await this.props.updateUser(
             this.props.auth.token,
             this.props.auth.user.id,
-            data,
+            {picture: dataImage},
           );
           Alert(this.props.auth.message, 'success');
         }
       },
     );
   };
-  addPhotoGallery = () => {
+  addPhotoGallery = async () => {
     this.setState({modalVisible: false});
     launchImageLibrary({}, async response => {
       if (response.didCancel) {
@@ -72,18 +69,22 @@ class Profile extends Component {
           type: response.type,
           name: response.fileName,
         };
-        const data = new FormData();
-        data.append('picture', dataImage);
         await this.props.updateUser(
           this.props.auth.token,
           this.props.auth.user.id,
-          data,
+          {picture: dataImage},
         );
         Alert(this.props.auth.message, 'success');
       }
     });
   };
-
+  doDeletePicture = async () => {
+    await this.props.deletePicture(
+      this.props.auth.token,
+      this.props.auth.user.id,
+    );
+    this.setState({modalVisible: false});
+  };
   render() {
     const {modalVisible} = this.state;
     const {user} = this.props.auth;
@@ -116,14 +117,20 @@ class Profile extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.button, styles.buttonClose]}
-                  onPress={() => this.setModalVisible(!modalVisible)}>
+                  onPress={this.doDeletePicture}>
                   <Text style={styles.textStyle}>Delete photo</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </Modal>
           <CardImg
-            source={ProfilImg}
+            source={
+              user.picture !== null
+                ? {
+                    uri: API_URL.concat(`/upload/profile/${user.picture}`),
+                  }
+                : ProfilImg
+            }
             name={`${user.firstname} ${user.lastname}`}
             phone={user.phoneNumber}
             onPress={() => this.setModalVisible(true)}
@@ -210,7 +217,6 @@ const styles = StyleSheet.create({
 });
 const mapStateToProps = state => ({
   auth: state.auth,
-  update: state.profile,
 });
-const mapDispatchToProps = {updateUser};
+const mapDispatchToProps = {updateUser, deletePicture};
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

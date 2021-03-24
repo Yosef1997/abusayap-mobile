@@ -13,6 +13,17 @@ import {connect} from 'react-redux';
 import {updateUser} from '../redux/actions/UpdateProfile';
 
 class MangePhoneNumber extends Component {
+  state = {
+    phoneNumber: this.props.auth.user.phoneNumber,
+  };
+  deletePhone = async () => {
+    await this.props.updateUser(
+      this.props.auth.token,
+      this.props.auth.user.id,
+      {phoneNumber: this.state.phoneNumber},
+      this.props.navigation.navigate('PersonalInfo'),
+    );
+  };
   render() {
     const {user} = this.props.auth;
     return (
@@ -36,6 +47,7 @@ class MangePhoneNumber extends Component {
           name="trash"
           size={25}
           color="#BBBBBE"
+          onPress={this.deletePhone}
         />
       </ScrollView>
     );

@@ -13,11 +13,6 @@ function AuthStack(props) {
     <>
       <Stack.Navigator>
         <Stack.Screen
-          component={CreatePin}
-          name="CreatePin"
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
           component={Login}
           name="Login"
           options={{headerShown: false}}
@@ -27,6 +22,12 @@ function AuthStack(props) {
           name="Register"
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          component={CreatePin}
+          name="CreatePin"
+          options={{headerShown: false}}
+        />
+
         <Stack.Screen
           component={ConfirmResetPassword}
           name="Confirm"

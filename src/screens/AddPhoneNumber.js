@@ -19,9 +19,12 @@ class AddPhoneNumber extends Component {
   };
   doUpdatePhone = async () => {
     const {phoneNumber} = this.state;
-    const data = new FormData();
-    data.append('phoneNumber', phoneNumber);
-    await this.props.updateUser('28', data);
+    await this.props.updateUser(
+      this.props.auth.token,
+      this.props.auth.user.id,
+      {phoneNumber: phoneNumber},
+    );
+    this.props.navigation.navigate('PersonalInfo');
   };
   render() {
     return (
@@ -79,7 +82,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  update: state.profile,
 });
 const mapDispatchToProps = {updateUser};
 export default connect(mapStateToProps, mapDispatchToProps)(AddPhoneNumber);
