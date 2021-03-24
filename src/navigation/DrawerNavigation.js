@@ -13,6 +13,7 @@ import ManagePhone from '../screens/MangePhoneNumber';
 import SearchReceiver from '../screens/SearchReceiver';
 import PinConfirm from '../screens/PinConfirm';
 import CostumDrawerNav from '../components/CostumDrawerNav';
+import Amount from '../screens/Amount';
 // import LineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import TransactionDetail from '../screens/TransactionDetail';
 import HeaderFlowTransaction from '../components/HeaderFlowTransaction';
@@ -24,6 +25,7 @@ const Drawer = createDrawerNavigator();
 
 function DrawerNavigation() {
   const auth = useSelector(state => state.auth);
+
   return (
     <Drawer.Navigator drawerContent={props => <CostumDrawerNav {...props} />}>
       {auth.token === null ? (
@@ -108,6 +110,7 @@ function DrawerNavigation() {
           <Drawer.Screen name="Addphone" component={Addphone} />
           <Drawer.Screen name="ManagePhone" component={ManagePhone} />
           <Drawer.Screen name="ChangePass" component={ChangePass} />
+          <Drawer.Screen name="Amount" component={Amount} />
         </React.Fragment>
       )}
     </Drawer.Navigator>

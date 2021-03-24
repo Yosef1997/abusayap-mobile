@@ -12,6 +12,7 @@ import persistedStore from './src/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
 import {Provider} from 'react-redux';
 import RNBootSplash from 'react-native-bootsplash';
+import linking from './src/helpers/linking';
 
 const App = () => {
   const {persistore, store} = persistedStore();
@@ -22,7 +23,7 @@ const App = () => {
   return (
     <PersistGate persistor={persistore}>
       <Provider store={store}>
-        <NavigationContainer>
+        <NavigationContainer linking={linking}>
           <DrawerNavigation />
         </NavigationContainer>
       </Provider>
