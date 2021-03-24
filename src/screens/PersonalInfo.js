@@ -16,15 +16,20 @@ class PersonalInfo extends Component {
   render() {
     const {user} = this.props.auth;
     return (
-      <ScrollView style={styles.container}>
+      <>
         <StatusBar backgroundColor="#00D16C" />
-        <View style={styles.row1}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Profile')}>
-            <Icon name="arrowleft" size={25} color="white" />
-          </TouchableOpacity>
-          <Text style={styles.textheader}>Personal Information</Text>
+        <View style={styles.container}>
+          <View style={styles.row1}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Profile')}>
+              <Icon name="arrowleft" size={25} color="white" />
+            </TouchableOpacity>
+            <Text style={styles.textheader}>Personal Information</Text>
+          </View>
         </View>
+
+        <ScrollView style={styles.container}>
+         <View style={styles.wrapperText}>
         <Text style={styles.text}>
           We got your personal information from the sign up proccess. If you
           want to make changes on your information, contact our support.
@@ -52,7 +57,9 @@ class PersonalInfo extends Component {
             manage="manage"
             onPress={() => this.props.navigation.navigate('ManagePhone')}
           />
+
         ) : (
+
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('Addphone')}>
             <Card
@@ -61,8 +68,10 @@ class PersonalInfo extends Component {
               textPersonal={styles.textAddNumber}
             />
           </TouchableOpacity>
-        )}
-      </ScrollView>
+          )}
+        </ScrollView>
+      </>
+
     );
   }
 }
@@ -89,7 +98,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#7A7886',
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'center',
     fontWeight: 'normal',
     marginTop: 40,
@@ -97,7 +106,7 @@ const styles = StyleSheet.create({
   },
   textPersonal: {
     color: '#514F5B',
-    fontSize: 22,
+    fontSize: 16,
     fontWeight: 'bold',
     marginTop: 10,
   },
@@ -106,6 +115,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginTop: 10,
+  },
+  wrapperText: {
+    paddingHorizontal: 10,
   },
 });
 

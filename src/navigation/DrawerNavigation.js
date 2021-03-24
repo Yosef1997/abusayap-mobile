@@ -92,7 +92,16 @@ function DrawerNavigation() {
               headerShown: false,
             }}
           />
-          <Drawer.Screen name="TopUp" component={TopUp} />
+          <Drawer.Screen
+            name="TopUp"
+            component={TopUp}
+            options={{
+            headerShown: true,
+            header: () => (
+              <HeaderFlowTransaction title="Top Up" rounded={false} />
+              ),
+            }}
+          />
           <Drawer.Screen name="Profile" component={Profile} />
           <Drawer.Screen name="PersonalInfo" component={PersonalInfo} />
           <Drawer.Screen name="ChangePin" component={ChangePin} />

@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#7A7886',
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'center',
     fontWeight: 'normal',
     marginTop: 40,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   textPersonal: {
     color: '#514F5B',
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
     marginTop: 10,
   },
