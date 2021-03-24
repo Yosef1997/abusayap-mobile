@@ -16,53 +16,59 @@ class PersonalInfo extends Component {
   render() {
     const {user} = this.props.auth;
     return (
-      <ScrollView style={styles.container}>
+      <>
         <StatusBar backgroundColor="#00D16C" />
-        <View style={styles.row1}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Profile')}>
-            <Icon name="arrowleft" size={25} color="white" />
-          </TouchableOpacity>
-          <Text style={styles.textheader}>Personal Information</Text>
+        <View style={styles.container}>
+          <View style={styles.row1}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Profile')}>
+              <Icon name="arrowleft" size={25} color="white" />
+            </TouchableOpacity>
+            <Text style={styles.textheader}>Personal Information</Text>
+          </View>
         </View>
-        <Text style={styles.text}>
-          We got your personal information from the sign up proccess. If you
-          want to make changes on your information, contact our support.
-        </Text>
-        <Card
-          label="First Name"
-          text={user.firstname}
-          textPersonal={styles.textPersonal}
-        />
-        <Card
-          label="Last Name"
-          text={user.lastname}
-          textPersonal={styles.textPersonal}
-        />
-        <Card
-          label="Verified E-mail"
-          text={user.email}
-          textPersonal={styles.textPersonal}
-        />
-        {user.phoneNumber !== null ? (
+        <ScrollView style={styles.container}>
+          <View style={styles.wrapperText}>
+            <Text style={styles.text}>
+              We got your personal information from the sign up proccess. If you
+              want to make changes on your information, contact our support.
+            </Text>
+          </View>
           <Card
-            label="Phone Number"
-            text={`+62 ${user.phoneNumber}`}
+            label="First Name"
+            text={user.firstname}
             textPersonal={styles.textPersonal}
-            manage="manage"
-            onPress={() => this.props.navigation.navigate('ManagePhone')}
           />
-        ) : (
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Addphone')}>
+          <Card
+            label="Last Name"
+            text={user.lastname}
+            textPersonal={styles.textPersonal}
+          />
+          <Card
+            label="Verified E-mail"
+            text={user.email}
+            textPersonal={styles.textPersonal}
+          />
+          {user.phoneNumber !== null ? (
             <Card
               label="Phone Number"
-              text="Add Phone Number"
-              textPersonal={styles.textAddNumber}
+              text={`+62 ${user.phoneNumber}`}
+              textPersonal={styles.textPersonal}
+              manage="manage"
+              onPress={() => this.props.navigation.navigate('ManagePhone')}
             />
-          </TouchableOpacity>
-        )}
-      </ScrollView>
+          ) : (
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Addphone')}>
+              <Card
+                label="Phone Number"
+                text="Add Phone Number"
+                textPersonal={styles.textAddNumber}
+              />
+            </TouchableOpacity>
+          )}
+        </ScrollView>
+      </>
     );
   }
 }
@@ -89,7 +95,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#7A7886',
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'center',
     fontWeight: 'normal',
     marginTop: 40,
@@ -97,7 +103,7 @@ const styles = StyleSheet.create({
   },
   textPersonal: {
     color: '#514F5B',
-    fontSize: 22,
+    fontSize: 16,
     fontWeight: 'bold',
     marginTop: 10,
   },
@@ -106,6 +112,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginTop: 10,
+  },
+  wrapperText: {
+    paddingHorizontal: 10,
   },
 });
 

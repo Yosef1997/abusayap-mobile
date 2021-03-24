@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Button from '../components/ButtonProfile';
+import PinField from '../components/PinField';
 import {connect} from 'react-redux';
 import {updateUser} from '../redux/actions/UpdateProfile';
 
@@ -18,17 +19,18 @@ class ChangePin extends Component {
   };
   doChangePin = async () => {
     const {pin} = this.state;
-    const data = new FormData();
-    data.append('pin', pin);
-    await this.props.updateUser('28', data);
+    await this.props.updateUser(
+      this.props.auth.token,
+      this.props.auth.user.id,
+      {pin: pin},
+    );
+    this.setState({pin: ''});
   };
-  doUpdatePhone = async () => {
-    const {pin} = this.state;
-    const data = new FormData();
-    data.append('pin', pin);
-    await this.props.updateUser('28', data);
+  handlePin = value => {
+    this.setState({
+      pin: value,
+    });
   };
-
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -43,7 +45,10 @@ class ChangePin extends Component {
         <Text style={styles.text}>
           Type your new 6 digits security PIN to use in{'\n'}Abusayap.
         </Text>
-        <Button label="Change Pin" />
+        <View style={styles.control}>
+          <PinField value={this.state.pin} onChangeText={this.handlePin} />
+        </View>
+        <Button label="Change Pin" onPress={this.doChangePin} />
       </ScrollView>
     );
   }
@@ -77,11 +82,14 @@ const styles = StyleSheet.create({
     marginTop: 40,
     marginBottom: 20,
   },
+  control: {
+    alignItems: 'center',
+    marginVertical: 50,
+  },
 });
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  update: state.profile,
 });
 const mapDispatchToProps = {updateUser};
 

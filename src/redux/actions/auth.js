@@ -53,13 +53,14 @@ export const signin = (email, password) => {
       const results = await http().post('/auth/login', params);
       const token = results.data.results.token;
       const user = jwt(token);
+      const profile = await http(token).get(`/user/${user.id}`);
       dispatch({
         type: 'REMOVE_MESSAGE',
       });
       dispatch({
         type: 'SIGN_IN',
         payload: token,
-        user: user,
+        user: profile.data.results,
       });
       dispatch({
         type: 'SET_LOADING',

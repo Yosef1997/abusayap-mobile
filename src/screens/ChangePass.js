@@ -6,22 +6,59 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Button from '../components/ButtonProfile';
+import PasswordField from '../components/PasswordField';
+import {Formik} from 'formik';
 import {connect} from 'react-redux';
 import {updateUser} from '../redux/actions/UpdateProfile';
 
 class ChangePass extends Component {
   state = {
-    currentPassword: '',
-    newPassword: '',
-    repeatPassword: '',
+    isLoading: false,
+    isMessage: false,
   };
-  // doChangePass = async () => {
-  //   const {currentPassword, newPassword, repeatPassword} = this.state;
+  passwordValidation(values) {
+    const errors = {};
+    const {password, newPassword, validNewPassword} = values;
 
-  // };
+    if (!password) {
+      errors.msg = 'Current Password Required';
+    } else if (!newPassword) {
+      errors.msg = 'New Password Required';
+    } else if (!validNewPassword) {
+      errors.msg = 'Repeat your new password';
+    } else if (
+      password.length < 8 ||
+      newPassword.length < 8 ||
+      validNewPassword.length < 8
+    ) {
+      errors.msg = 'Password have at least 8 characters';
+    } else if (password === newPassword) {
+      errors.msg = 'Cant same with current password';
+    } else if (newPassword !== validNewPassword) {
+      errors.msg = 'New password & repeat password not same';
+    }
+    return errors;
+  }
+
+  async passwordPush(values) {
+    this.setState({isLoading: true});
+    const {token, user} = this.props.auth;
+    console.log(user);
+    await this.props.updateUser(token, user.id, {
+      password: values.password,
+      newPassword: values.newPassword,
+    });
+    setTimeout(() => {
+      this.setState({isLoading: false, isMessage: true});
+    }, 1000);
+    setTimeout(() => {
+      this.setState({isMessage: false});
+    }, 5000);
+  }
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -37,7 +74,80 @@ class ChangePass extends Component {
           You must enter your current password and then{'\n'}type your new
           password twice.
         </Text>
-        <Button label="Change Password" />
+        <Formik
+          initialValues={{password: '', newPassword: '', validNewPassword: ''}}
+          validate={values => this.passwordValidation(values)}
+          onSubmit={(values, {resetForm}) => {
+            this.setState({isLoading: true});
+            this.passwordPush(values);
+            setTimeout(() => {
+              resetForm();
+            }, 500);
+          }}>
+          {({
+            values,
+            errors,
+            // touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+          }) => (
+            <>
+              <View style={styles.control}>
+                <PasswordField
+                  placeholder="Current Password"
+                  value={values.password}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                />
+                {/* {touched.password && errors.msg ? (
+                  <Text style={styles.textError}>{errors.msg}</Text>
+                ) : null} */}
+              </View>
+              <View style={styles.control}>
+                <PasswordField
+                  placeholder="New Password"
+                  value={values.newPassword}
+                  onChangeText={handleChange('newPassword')}
+                  onBlur={handleBlur('newPassword')}
+                />
+                {/* {errors.newPassword && touched.newPassword ? (
+                  <Text style={styles.textError}>{errors.msg}</Text>
+                ) : null} */}
+              </View>
+              <View style={styles.control}>
+                <PasswordField
+                  placeholder="Repeat Password"
+                  value={values.validNewPassword}
+                  onChangeText={handleChange('validNewPassword')}
+                  onBlur={handleBlur('validNewPassword')}
+                />
+                {/* {touched.password &&
+                touched.newPassword &&
+                touched.validNewPassword && */}
+                {errors.msg ? (
+                  <Text style={styles.textError}>{errors.msg}</Text>
+                ) : null}
+                {this.props.auth.authMessage && this.state.isMessage ? (
+                  <Text style={styles.textsuccess}>
+                    {this.props.auth.authMessage}
+                  </Text>
+                ) : null}
+                {this.props.auth.errorMsg && this.state.isMessage ? (
+                  <Text style={styles.textError}>
+                    {this.props.auth.errorMsg}
+                  </Text>
+                ) : null}
+                {this.state.isLoading ? (
+                  <View>
+                    <ActivityIndicator size="large" />
+                  </View>
+                ) : null}
+              </View>
+              <Button label="Change Password" onPress={handleSubmit} />
+            </>
+          )}
+        </Formik>
       </ScrollView>
     );
   }
@@ -69,6 +179,24 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     marginTop: 40,
     marginBottom: 20,
+  },
+  control: {
+    marginTop: 30,
+    marginBottom: 20,
+    marginHorizontal: 16,
+  },
+  textError: {
+    // fontFamily: 'Roboto-Reguler',
+    fontSize: 16,
+    color: 'red',
+    textAlign: 'center',
+    marginVertical: 10,
+  },
+  textsuccess: {
+    fontSize: 16,
+    color: '#00D16C',
+    textAlign: 'center',
+    marginVertical: 10,
   },
 });
 const mapStateToProps = state => ({

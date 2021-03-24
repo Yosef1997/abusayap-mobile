@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/core';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,13 +10,72 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import ListTransaction from '../components/ListTransaction';
+import LoadMore from '../components/LoadMore';
 import MainHeader from '../components/MainHeader';
+import http from '../helpers/http';
+import rupiah from '../helpers/rupiah';
+import {
+  newHistoryTransaction,
+  pageInfoHistoryTransaction,
+} from '../redux/actions/transaction';
+import Chart from '../components/Chart';
 
 const TransactionDetail = () => {
   const navigation = useNavigation();
   const historyTransaction = useSelector(state => state.transaction.history);
+  const token = useSelector(state => state.auth.token);
+  const profile = useSelector(state => state.auth.user);
+  const [income, setIncome] = useState(null);
+  const nextPage = useSelector(state => state.transaction.pageInfoTransaction);
+  const [listRefresh, setListRefresh] = useState(false);
+  const dispatch = useDispatch();
+
+  const fetchNewData = async () => {
+    try {
+      setListRefresh(true);
+      const oldData = historyTransaction;
+      const response = await http(token).get(`${nextPage.nextLink}`);
+      const resultResponse = response.data.results;
+      dispatch(pageInfoHistoryTransaction(response.data.pageInfo));
+      const newData = [...oldData, ...resultResponse];
+      dispatch(newHistoryTransaction(newData));
+      setListRefresh(false);
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
+  const nextData = async () => {
+    const oldData = historyTransaction;
+    try {
+      const response = await http(token).get(`${nextPage.nextLink}`);
+      const resultResponse = response.data.results;
+      dispatch(pageInfoHistoryTransaction(response.data.pageInfo));
+      const newData = [...oldData, ...resultResponse];
+      dispatch(newHistoryTransaction(newData));
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
+  const getDetailIncome = async () => {
+    const response = await http(token).get(
+      `/transaction/amountTransaction/${profile.id}`,
+    );
+    setIncome(response.data.results[0]);
+  };
+
+  useEffect(() => {
+    getDetailIncome();
+  }, []);
+
+  console.log(
+    income,
+    '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ini income',
+  );
+
   return (
     <>
       <MainHeader>
@@ -24,14 +84,18 @@ const TransactionDetail = () => {
             <Icon name="arrow-down" style={style.arrowDown} />
             <View>
               <Text style={style.textIncomeExpense}>Income</Text>
-              <Text style={style.textAmount}>Rp. 2.000.000</Text>
+              <Text style={style.textAmount}>
+                Rp. {income !== null && rupiah(income.income)}
+              </Text>
             </View>
           </View>
           <View style={style.rowIncomeExpense}>
             <Icon name="arrow-up" style={style.arrowUp} />
             <View>
               <Text style={style.textIncomeExpense}>Expense</Text>
-              <Text style={style.textAmount}>Rp. 1.020.000</Text>
+              <Text style={style.textAmount}>
+                Rp. {income !== null && rupiah(income.expense)}
+              </Text>
             </View>
           </View>
         </View>
@@ -39,7 +103,7 @@ const TransactionDetail = () => {
       <View style={style.mainBodyWrapper}>
         <Text style={style.title}>In This Week</Text>
         <View>
-          <Text>Chart</Text>
+          <Chart />
         </View>
         <View style={style.rowTitle}>
           <Text style={style.title}>Transaction History</Text>
@@ -58,10 +122,17 @@ const TransactionDetail = () => {
                 id={item.id}
                 name={item.name}
                 amount={item.amount}
-                isTransfer={item.isTransfer}
+                isTransfer={item.userAs}
+                picture={item.picture}
+                createdAt={item.createdAt}
               />
             );
           }}
+          refreshing={listRefresh}
+          onRefresh={fetchNewData}
+          onEndReached={nextData}
+          onEndReachedThreshold={1}
+          ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
         />
       </View>
     </>

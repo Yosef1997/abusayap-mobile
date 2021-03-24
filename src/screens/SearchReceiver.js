@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
-import {Text, View, ScrollView, StyleSheet, FlatList} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 import Search from '../components/CustomInput';
 import ListContact from '../components/CardContact';
 import {connect} from 'react-redux';
@@ -7,22 +13,49 @@ import {connect} from 'react-redux';
 class SearchReceiver extends Component {
   render() {
     return (
-      <ScrollView style={styles.container}>
-        <Search icon1="search" icon2="sort-amount-desc" />
-        <Text style={styles.title}>Contacts</Text>
-        <Text style={styles.count}>{`${123} Contact Founds`}</Text>
-        <FlatList
-          data={this.props.contact.history}
-          keyExtractor={(item, index) => String(index)}
-          renderItem={({item}) => {
-            return <ListContact id={item.id} name={item.name} />;
-          }}
-        />
-      </ScrollView>
+      <>
+        <View style={styles.container}>
+          <Search icon1="search" icon2="sort-amount-desc" />
+          <Text style={styles.title}>Contacts</Text>
+          <Text
+            style={
+              styles.count
+            }>{`${this.props.contact.listContact.length} Contact Founds`}</Text>
+        </View>
+        <View style={styles.wrapperFlatList}>
+          {this.props.contact.isLoading === true ? (
+            <ActivityIndicator
+              size="large"
+              color="black"
+              style={styles.loading}
+            />
+          ) : (
+            <FlatList
+              data={this.props.contact.listContact}
+              keyExtractor={(item, index) => String(index)}
+              renderItem={({item}) => {
+                return (
+                  <ListContact
+                    id={item.id}
+                    name={item.name}
+                    picture={item.picture}
+                  />
+                );
+              }}
+            />
+          )}
+        </View>
+      </>
     );
   }
 }
 const styles = StyleSheet.create({
+  wrapperFlatList: {
+    paddingHorizontal: 10,
+  },
+  loading: {
+    marginTop: 30,
+  },
   container: {
     backgroundColor: '#fafcff',
   },
@@ -31,7 +64,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#514F5B',
     marginLeft: 16,
-    marginTop: 40,
+    marginTop: 15,
   },
   count: {
     fontSize: 14,
@@ -39,6 +72,7 @@ const styles = StyleSheet.create({
     color: '#8F8F8F',
     marginLeft: 16,
     marginTop: 10,
+    marginBottom: 10,
   },
 });
 

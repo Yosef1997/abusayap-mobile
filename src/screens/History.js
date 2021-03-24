@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/core';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,19 +12,27 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-modern-datepicker';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import ListTransaction from '../components/ListTransaction';
-import moment from 'moment';
+import http from '../helpers/http';
+import IconSort from 'react-native-vector-icons/MaterialCommunityIcons';
+import LoadMore from '../components/LoadMore';
 
 const History = () => {
-  const dateNow = moment(Date()).format('ll');
   const [showModal, setShowModal] = useState(false);
   const [firstDate, setFirstDate] = useState(true);
   const [secondDate, setSecondDate] = useState(false);
-  const [dateFirstVal, setDateFirstVal] = useState(dateNow);
-  const [dateSecondVal, setDateSecondVal] = useState(dateNow);
+  const [dateFirstVal, setDateFirstVal] = useState('');
+  const [dateSecondVal, setDateSecondVal] = useState('');
+  const [listRefresh, setListRefresh] = useState(false);
+  const [filterBy, setFilterBy] = useState(null);
+  const [sort, setSort] = useState('DESC');
+  const [switcherSort, setSwitcherSort] = useState(false);
+  const [nextPage, setNextPage] = useState('');
+  const [historyTransaction, setHistoryTransaction] = useState([]);
+  const token = useSelector(state => state.auth.token);
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-  const historyTransaction = useSelector(state => state.transaction.history);
 
   const btnActive = data => {
     if (data === 'first') {
@@ -36,12 +45,70 @@ const History = () => {
   };
 
   const setDateValue = date => {
+    const dateParse = date.split('/');
+    const dateFinnaly = dateParse.join('-');
     if (firstDate === true) {
-      setDateFirstVal(date);
+      setDateFirstVal(dateFinnaly);
     } else if (secondDate === true) {
-      setDateSecondVal(date);
+      setDateSecondVal(dateFinnaly);
     }
   };
+
+  const handleBtnFilter = btnFilter => {
+    if (filterBy === btnFilter) {
+      setFilterBy('');
+    } else {
+      setFilterBy(btnFilter);
+    }
+  };
+
+  const handleBtnSort = switcher => {
+    if (sort === 'DESC') {
+      setSort('ASC');
+    } else if (sort === 'ASC') {
+      setSort('DESC');
+    }
+  };
+
+  const fetchNewData = async () => {
+    try {
+      setListRefresh(true);
+      const oldData = historyTransaction;
+      const response = await http(token).get(`${nextPage.nextLink}`);
+      const resultResponse = response.data.results;
+      setNextPage(response.data.pageInfo);
+      const newData = [...oldData, ...resultResponse];
+      setHistoryTransaction(newData);
+      setListRefresh(false);
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
+  const nextData = async () => {
+    const oldData = historyTransaction;
+    try {
+      const response = await http(token).get(`${nextPage.nextLink}`);
+      const resultResponse = response.data.results;
+      setNextPage(response.data.pageInfo);
+      const newData = [...oldData, ...resultResponse];
+      setHistoryTransaction(newData);
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
+  const getDataByCondition = async () => {
+    const response = await http(token).get(
+      `/transaction/history?search=&page=1&limit=6&offset=0&sort=createdAt&order=${sort}&filter=${filterBy}&dateMin=${dateFirstVal}&dateMax=${dateSecondVal}`,
+    );
+    setHistoryTransaction(response.data.results);
+    setNextPage(response.data.pageInfo);
+  };
+
+  useEffect(() => {
+    getDataByCondition();
+  }, [sort, filterBy, dateFirstVal, dateSecondVal]);
 
   return (
     <>
@@ -100,25 +167,42 @@ const History = () => {
         <View style={style.flatListWrapper}>
           <FlatList
             data={historyTransaction}
-            keyExtractor={(item, index) => String(index)}
+            keyExtractor={(item, index) => String(item.id)}
             renderItem={({item}) => {
               return (
                 <ListTransaction
                   id={item.id}
                   name={item.name}
                   amount={item.amount}
-                  isTransfer={item.isTransfer}
+                  isTransfer={item.userAs}
+                  picture={item.picture}
+                  createdAt={item.createdAt}
                 />
               );
             }}
+            refreshing={listRefresh}
+            onRefresh={fetchNewData}
+            onEndReached={nextData}
+            onEndReachedThreshold={1}
           />
         </View>
         <View style={style.rowFilter}>
-          <TouchableOpacity style={style.btn}>
+          <TouchableOpacity
+            style={filterBy === 'sender' ? style.btnActive : style.btn}
+            onPress={() => handleBtnFilter('sender')}>
             <Icon name="arrow-up" style={style.arrowUp} />
           </TouchableOpacity>
-          <TouchableOpacity style={style.btn}>
+          <TouchableOpacity
+            style={filterBy === 'receiver' ? style.btnActive : style.btn}
+            onPress={() => handleBtnFilter('receiver')}>
             <Icon name="arrow-down" style={style.arrowDown} />
+          </TouchableOpacity>
+          <TouchableOpacity style={style.btn} onPress={() => handleBtnSort()}>
+            {sort === 'ASC' ? (
+              <IconSort name="sort-ascending" style={style.arrowDown} />
+            ) : (
+              <IconSort name="sort-descending" style={style.arrowDownAsc} />
+            )}
           </TouchableOpacity>
           <TouchableOpacity
             style={style.btnDate}
@@ -152,6 +236,15 @@ const style = StyleSheet.create({
     borderRadius: 10,
     marginRight: 20,
   },
+  btnActive: {
+    height: 56,
+    width: 56,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginRight: 20,
+  },
   btnDate: {
     elevation: 3,
     height: 56,
@@ -169,9 +262,13 @@ const style = StyleSheet.create({
     color: '#1EC15F',
     fontSize: 25,
   },
+  arrowDownAsc: {
+    color: '#FF5B37',
+    fontSize: 25,
+  },
   textFilterDate: {
     color: '#00D16C',
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: 'bold',
   },
   parentModal: {

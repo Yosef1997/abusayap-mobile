@@ -2,25 +2,38 @@ import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import profile from '../assets/images/profile.jpg';
+import rupiah from '../helpers/rupiah';
+import moment from 'moment';
 
 const ListTransaction = props => {
+  const amount = props.amount;
+  const ConvertRupiah = rupiah(amount);
   return (
-    <TouchableOpacity style={style.card}>
+    <TouchableOpacity style={style.card} onPress={() => ''}>
       <View style={style.wrapper}>
-        <Image source={profile} style={style.photoProfile} />
+        {props.picture === null ? (
+          <Image source={profile} style={style.photoProfile} />
+        ) : (
+          <Image source={{uri: props.picture}} style={style.photoProfile} />
+        )}
         <View style={style.rowName}>
           <Text style={style.textName}>{props.name}</Text>
           <Text style={style.textStatus}>
-            {props.isTransfer === false ? 'Transfer' : 'Subcription'}
+            {props.isTransfer === 'receiver' ? 'Transfer' : 'Subcription'}
+          </Text>
+          <Text style={style.textCreatedAt}>
+            {moment(props.createdAt).format('ll LT')}
           </Text>
         </View>
         <Text
           style={
-            props.isTransfer === false
+            props.isTransfer === 'receiver'
               ? style.textAmountTransfer
               : style.textAmountSubcription
           }>
-          {props.isTransfer === false ? `+${props.amount}` : `-${props.amount}`}
+          {props.isTransfer === 'receiver'
+            ? `+${ConvertRupiah}`
+            : `-${ConvertRupiah}`}
         </Text>
       </View>
     </TouchableOpacity>
@@ -56,6 +69,10 @@ const style = StyleSheet.create({
   textStatus: {
     color: '#7A7886',
     fontSize: 14,
+  },
+  textCreatedAt: {
+    color: '#7A7886',
+    fontSize: 11,
   },
   textAmountTransfer: {
     color: '#1EC15F',

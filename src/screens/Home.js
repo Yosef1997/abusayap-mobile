@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/core';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,23 +12,79 @@ import {
   FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import profile from '../assets/images/profile.jpg';
 import ListTransaction from '../components/ListTransaction';
+import LoadMore from '../components/LoadMore';
 import MainHeader from '../components/MainHeader';
+import http from '../helpers/http';
+import rupiah from '../helpers/rupiah';
+import {
+  historyTransaction,
+  newHistoryTransaction,
+  pageInfoHistoryTransaction,
+} from '../redux/actions/transaction';
 
 const Home = () => {
   const navigation = useNavigation();
-  const historyTransaction = useSelector(state => state.transaction.history);
+  const [listRefresh, setListRefresh] = useState(false);
+  const historyTransactionData = useSelector(
+    state => state.transaction.history,
+  );
+  const nextPage = useSelector(state => state.transaction.pageInfoTransaction);
+  const profileInfo = useSelector(state => state.auth.user);
+  const token = useSelector(state => state.auth.token);
+  const balanceUser = rupiah(profileInfo.balance);
+  const dispatch = useDispatch();
+
+  const fetchNewData = async () => {
+    try {
+      setListRefresh(true);
+      const oldData = historyTransactionData;
+      const response = await http(token).get(`${nextPage.nextLink}`);
+      const resultResponse = response.data.results;
+      dispatch(pageInfoHistoryTransaction(response.data.pageInfo));
+      const newData = [...oldData, ...resultResponse];
+      dispatch(newHistoryTransaction(newData));
+      setListRefresh(false);
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
+  const nextData = async () => {
+    const oldData = historyTransactionData;
+    try {
+      const response = await http(token).get(`${nextPage.nextLink}`);
+      const resultResponse = response.data.results;
+      dispatch(pageInfoHistoryTransaction(response.data.pageInfo));
+      const newData = [...oldData, ...resultResponse];
+      dispatch(newHistoryTransaction(newData));
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    dispatch(historyTransaction(token));
+  }, []);
+
   return (
     <>
       <StatusBar backgroundColor="#00D16C" />
       <MainHeader>
         <View style={style.row}>
-          <Image source={profile} style={style.photoProfile} />
+          {profileInfo.picture === null ? (
+            <Image source={profile} style={style.photoProfile} />
+          ) : (
+            <Image
+              source={{uri: profileInfo.picture}}
+              style={style.photoProfile}
+            />
+          )}
           <View style={style.rowBalance}>
             <Text style={style.textBalance}>Balance</Text>
-            <Text style={style.textAmount}>Rp. 120.000</Text>
+            <Text style={style.textAmount}>Rp. {balanceUser}</Text>
           </View>
           <Pressable
             android_ripple={{color: 'black', radius: 30, borderless: true}}>
@@ -59,18 +116,25 @@ const Home = () => {
       </View>
       <View style={style.flatListWrapper}>
         <FlatList
-          data={historyTransaction}
-          keyExtractor={(item, index) => String(index)}
+          data={historyTransactionData}
+          keyExtractor={(item, index) => String(item.id)}
           renderItem={({item}) => {
             return (
               <ListTransaction
                 id={item.id}
                 name={item.name}
                 amount={item.amount}
-                isTransfer={item.isTransfer}
+                isTransfer={item.userAs}
+                picture={item.picture}
+                createdAt={item.createdAt}
               />
             );
           }}
+          refreshing={listRefresh}
+          onRefresh={fetchNewData}
+          onEndReached={nextData}
+          onEndReachedThreshold={0.5}
+          // ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
         />
       </View>
     </>

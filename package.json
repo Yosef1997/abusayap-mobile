@@ -17,12 +17,14 @@
     "@react-navigation/stack": "^5.14.3",
     "@reduxjs/toolkit": "^1.5.0",
     "axios": "^0.21.1",
+    "formik": "^2.2.6",
     "jwt-decode": "^3.1.2",
     "link": "^0.1.5",
     "moment": "^2.29.1",
     "react": "17.0.1",
     "react-native": "^0.64.0",
     "react-native-bootsplash": "^3.2.0",
+    "react-native-chart-kit": "^6.11.0",
     "react-native-dotenv": "^2.5.3",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-image-picker": "^3.3.2",
@@ -38,7 +40,8 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

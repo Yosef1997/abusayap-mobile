@@ -1,4 +1,4 @@
-function rupiah (number) {
+function rupiah(number) {
   const numberStrinng = number.toString().replace(/[^0-9]/g, '');
   const split = numberStrinng.split(',');
   const sisa = split[0].length % 3;
