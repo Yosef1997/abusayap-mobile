@@ -96,9 +96,9 @@ function DrawerNavigation() {
             name="TopUp"
             component={TopUp}
             options={{
-            headerShown: true,
-            header: () => (
-              <HeaderFlowTransaction title="Top Up" rounded={false} />
+              headerShown: true,
+              header: () => (
+                <HeaderFlowTransaction title="Top Up" rounded={false} />
               ),
             }}
           />
