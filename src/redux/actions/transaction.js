@@ -93,3 +93,20 @@ export const topUp = (token, data) => {
     }
   };
 };
+export const transactionInfo = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'TRANSACTION_INFO',
+      payload: data,
+    });
+  };
+};
+
+export const sendAmount = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'SEND',
+      payload: data,
+    });
+  };
+};

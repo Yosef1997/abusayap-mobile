@@ -1,47 +1,68 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {View, Text, ScrollView, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useDispatch, useSelector} from 'react-redux';
 import MainHeader from '../components/MainHeader';
-import ProfileSelected from '../components/ProfileSelected';
+import UserCard from '../components/UserCard';
+import rupiah from '../helpers/rupiah';
+import moment from 'moment';
+import {sendAmount} from '../redux/actions/transaction';
 
 const Confirmation = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const transactionInfo = useSelector(
+    state => state.transaction.transactionInfo,
+  );
+  const token = useSelector(state => state.auth.token);
+  const balanceSelf = useSelector(state => state.auth.user);
+  const handlePress = () => {
+    dispatch(sendAmount(token, transactionInfo));
+  };
   return (
     <>
       <MainHeader>
-        <ProfileSelected />
+        <UserCard />
       </MainHeader>
       <View style={style.parentWrapp}>
         <View style={style.row}>
           <View style={style.card}>
             <Text style={style.textTitle}>Amount</Text>
-            <Text style={style.textBodyCard}>Rp100.000</Text>
+            <Text style={style.textBodyCard}>
+              Rp. {rupiah(transactionInfo.amount)}
+            </Text>
           </View>
           <View style={style.card}>
             <Text style={style.textTitle}>Balance Left</Text>
-            <Text style={style.textBodyCard}>Rp20.000</Text>
+            <Text style={style.textBodyCard}>
+              Rp. {rupiah(balanceSelf.balance - transactionInfo.amount)}
+            </Text>
           </View>
         </View>
         <View style={style.row}>
           <View style={style.card}>
             <Text style={style.textTitle}>Date</Text>
-            <Text style={style.textBodyCard}>May 11, 2020</Text>
+            <Text style={style.textBodyCard}>
+              {moment(transactionInfo.date).format('ll')}
+            </Text>
           </View>
           <View style={style.card}>
             <Text style={style.textTitle}>Time</Text>
-            <Text style={style.textBodyCard}>12.20</Text>
+            <Text style={style.textBodyCard}>
+              {moment(transactionInfo.date).format('LT')}
+            </Text>
           </View>
         </View>
         <View style={style.row}>
           <View style={style.cardNote}>
             <Text style={style.textTitle}>Notes</Text>
-            <Text style={style.textBodyCard}>For buying some socks</Text>
+            <Text style={style.textBodyCard}>{transactionInfo.note}</Text>
           </View>
         </View>
         <TouchableOpacity
           style={style.btnContinue}
-          onPress={() => navigation.navigate('Result')}>
+          onPress={() => handlePress()}>
           <Text style={style.textContinue}>Continue</Text>
         </TouchableOpacity>
       </View>
