@@ -9,10 +9,12 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Card from '../components/CardPersonalInfo';
-// import {connect} from 'react-redux';
+import {connect} from 'react-redux';
+import {updateUser} from '../redux/actions/UpdateProfile';
 
-export default class PersonalInfo extends Component {
+class PersonalInfo extends Component {
   render() {
+    const {user} = this.props.auth;
     return (
       <>
         <StatusBar backgroundColor="#00D16C" />
@@ -25,35 +27,39 @@ export default class PersonalInfo extends Component {
             <Text style={styles.textheader}>Personal Information</Text>
           </View>
         </View>
+
         <ScrollView style={styles.container}>
-          <View style={styles.wrapperText}>
-            <Text style={styles.text}>
-              We got your personal information from the sign up proccess. If you
-              want to make changes on your information, contact our support.
-            </Text>
-          </View>
-          <Card
-            label="First Name"
-            text="John"
-            textPersonal={styles.textPersonal}
-          />
-          <Card
-            label="Last Name"
-            text="Cena"
-            textPersonal={styles.textPersonal}
-          />
-          <Card
-            label="Verified E-mail"
-            text="pewdiepie1@gmail.com"
-            textPersonal={styles.textPersonal}
-          />
+         <View style={styles.wrapperText}>
+        <Text style={styles.text}>
+          We got your personal information from the sign up proccess. If you
+          want to make changes on your information, contact our support.
+        </Text>
+        <Card
+          label="First Name"
+          text={user.firstname}
+          textPersonal={styles.textPersonal}
+        />
+        <Card
+          label="Last Name"
+          text={user.lastname}
+          textPersonal={styles.textPersonal}
+        />
+        <Card
+          label="Verified E-mail"
+          text={user.email}
+          textPersonal={styles.textPersonal}
+        />
+        {user.phoneNumber !== null ? (
           <Card
             label="Phone Number"
-            text="+62 813-9387-7946"
+            text={`+62 ${user.phoneNumber}`}
             textPersonal={styles.textPersonal}
             manage="manage"
             onPress={() => this.props.navigation.navigate('ManagePhone')}
           />
+
+        ) : (
+
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('Addphone')}>
             <Card
@@ -62,8 +68,10 @@ export default class PersonalInfo extends Component {
               textPersonal={styles.textAddNumber}
             />
           </TouchableOpacity>
+          )}
         </ScrollView>
       </>
+
     );
   }
 }
@@ -114,8 +122,8 @@ const styles = StyleSheet.create({
 });
 
 //Connect Redux
-// const mapStateToProps =(state) => ({
-//   auth:state.auth
-// })
-// const mapDispatchToProps = {}
-// export default connect(mapStateToProps, mapDispatchToProps)(PersonalInfo)
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+const mapDispatchToProps = {updateUser};
+export default connect(mapStateToProps, mapDispatchToProps)(PersonalInfo);

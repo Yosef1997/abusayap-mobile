@@ -86,6 +86,7 @@ class Profile extends Component {
 
   render() {
     const {modalVisible} = this.state;
+    const {user} = this.props.auth;
     return (
       <React.Fragment>
         <StatusBar backgroundColor="#fafcff" barStyle="dark-content" />
@@ -123,8 +124,8 @@ class Profile extends Component {
           </Modal>
           <CardImg
             source={ProfilImg}
-            name="John Cena"
-            phone="889900"
+            name={`${user.firstname} ${user.lastname}`}
+            phone={user.phoneNumber}
             onPress={() => this.setModalVisible(true)}
           />
           <Card
@@ -208,6 +209,7 @@ const styles = StyleSheet.create({
   },
 });
 const mapStateToProps = state => ({
+  auth: state.auth,
   update: state.profile,
 });
 const mapDispatchToProps = {updateUser};

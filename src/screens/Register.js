@@ -17,8 +17,23 @@ import EmailField from '../components/EmailField';
 import PasswordField from '../components/PasswordField';
 import UsernameField from '../components/UsernameField';
 import Button from '../components/Button';
+import {connect} from 'react-redux';
+import {signup} from '../redux/actions/auth';
 
 class Register extends Component {
+  state = {
+    username: '',
+    email: '',
+    password: '',
+  };
+  doRegister = async () => {
+    const {username, email, password} = this.state;
+    console.log(username, email, password);
+    await this.props.signup(username, email, password);
+    if (this.props.auth.authMessage !== '') {
+      this.props.navigation.navigate('Login');
+    }
+  };
   render() {
     return (
       <Fragment>
@@ -34,16 +49,25 @@ class Register extends Component {
               </View>
               <View style={styles.form}>
                 <View style={styles.control}>
-                  <UsernameField placeholder="Enter your username" />
+                  <UsernameField
+                    placeholder="Enter your username"
+                    onChangeText={username => this.setState({username})}
+                  />
                 </View>
                 <View style={styles.control}>
-                  <EmailField placeholder="Enter your email" />
+                  <EmailField
+                    placeholder="Enter your email"
+                    onChangeText={email => this.setState({email})}
+                  />
                 </View>
                 <View style={styles.control}>
-                  <PasswordField placeholder="Enter your password" />
+                  <PasswordField
+                    placeholder="Enter your password"
+                    onChangeText={password => this.setState({password})}
+                  />
                 </View>
                 <View style={styles.control}>
-                  <Button>Sign Up</Button>
+                  <Button onPress={this.doRegister}>Sign Up</Button>
                 </View>
               </View>
               <TouchableOpacity
@@ -61,8 +85,6 @@ class Register extends Component {
     );
   }
 }
-
-export default Register;
 
 const styles = StyleSheet.create({
   title: {
@@ -96,3 +118,9 @@ const styles = StyleSheet.create({
     color: '#00D16C',
   },
 });
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+const mapDispatchToProps = {signup};
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
