@@ -28,6 +28,7 @@
     "react-native-dotenv": "^2.5.3",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-image-picker": "^3.3.2",
+    "react-native-keyboard-aware-scroll-view": "^0.9.3",
     "react-native-modern-datepicker": "^1.0.0-beta.91",
     "react-native-reanimated": "^2.0.0",
     "react-native-safe-area-context": "^3.2.0",
