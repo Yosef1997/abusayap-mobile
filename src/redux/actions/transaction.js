@@ -75,6 +75,7 @@ export const topUp = (token, data) => {
       Object.keys(data).forEach(key => {
         form.append(key, data[key]);
       });
+      console.log(form);
       dispatch({
         type: 'TOPUP_MESSAGE',
         payload: '',
@@ -85,6 +86,7 @@ export const topUp = (token, data) => {
         payload: response.data.message,
       });
     } catch (err) {
+      // console.log(err);
       const {message} = err.response.data;
       dispatch({
         type: 'TOPUP_MESSAGE',

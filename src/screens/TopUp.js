@@ -7,12 +7,12 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
-  Alert,
   Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import {TextInput} from 'react-native-gesture-handler';
+import moment from 'moment';
 import {connect} from 'react-redux';
 import {topUp} from '../redux/actions/transaction';
 
@@ -24,12 +24,10 @@ class App extends Component {
   setModalVisible = visible => {
     this.setState({modalVisible: visible});
   };
-  addPhotoCamera = async value => {
+  addPhotoCamera = async () => {
     this.setState({modalVisible: false});
     const {amount} = this.state;
-    console.log(amount);
     const dateTransaction = new Date();
-    console.log(dateTransaction);
     launchCamera(
       {
         quality: 0.3,
@@ -61,8 +59,10 @@ class App extends Component {
           };
           await this.props.topUp(this.props.auth.token, {
             amount: amount,
-            dateTransaction: dateTransaction,
             picture: dataImage,
+            dateTransaction: moment(dateTransaction).format(
+              'YYYY-MM-DD hh:mm:ss',
+            ),
           });
           // Alert(this.props.transaction.topUpMessage, 'success');
           this.props.dispatch({
@@ -103,9 +103,11 @@ class App extends Component {
         };
         console.log(dataImage);
         await this.props.topUp(this.props.auth.token, {
-          picture: dataImage,
           amount: amount,
-          dateTransaction: dateTransaction,
+          picture: dataImage,
+          dateTransaction: moment(dateTransaction).format(
+            'YYYY-MM-DD hh:mm:ss',
+          ),
         });
         // Alert(this.props.transaction.topUpMessage, 'success');
         this.props.dispatch({
