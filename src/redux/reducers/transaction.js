@@ -4,6 +4,7 @@ const initialState = {
   listContact: [],
   contactFocus: null,
   transactionInfo: null,
+  statusSend: null,
   isLoading: false,
   messageResponse: null,
   topUpMessage: null,
@@ -55,6 +56,11 @@ const transactionReducer = (state = initialState, action) => {
       return {
         ...state,
         transactionInfo: action.payload,
+      };
+    case 'SEND_AMOUNT':
+      return {
+        ...state,
+        statusSend: action.payload,
       };
     case 'IS_LOADING':
       return {

@@ -1,4 +1,5 @@
 import http from '../../helpers/http';
+import moment from 'moment';
 
 export const historyTransaction = token => {
   return async dispatch => {
@@ -104,11 +105,20 @@ export const transactionInfo = data => {
   };
 };
 
-export const sendAmount = data => {
+export const sendAmount = (token, receiver, data, pin) => {
+  console.log(data);
   return async dispatch => {
+    const form = new URLSearchParams();
+    form.append('idReceiver', receiver.id);
+    form.append('amount', data.amount);
+    form.append('notes', data.note);
+    form.append('status', 'transfer');
+    form.append('dateTransaction', new Date());
+    form.append('pin', pin);
+    const response = http(token).post('/transaction', form);
     dispatch({
-      type: 'SEND',
-      payload: data,
+      type: 'SEND_AMOUNT',
+      payload: response.data.status,
     });
   };
 };
