@@ -20,7 +20,6 @@ import HeaderFlowTransaction from '../components/HeaderFlowTransaction';
 import Confirmation from '../screens/Confirmation';
 import ResultTransaction from '../screens/ResultTransaction';
 import {useSelector} from 'react-redux';
-import Amount from '../screens/Amount';
 
 const Drawer = createDrawerNavigator();
 
