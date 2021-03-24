@@ -39,6 +39,8 @@ class SearchReceiver extends Component {
                     id={item.id}
                     name={item.name}
                     picture={item.picture}
+                    email={item.email}
+                    phoneNumber={item.phoneNumber}
                   />
                 );
               }}
