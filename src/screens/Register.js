@@ -7,6 +7,7 @@ import {
   ScrollView,
   View,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 
 // import all components
@@ -25,15 +26,82 @@ class Register extends Component {
     username: '',
     email: '',
     password: '',
+    messageUsername: "Username can't be empty",
+    messageEmail: "Email can't be empty",
+    messagePassword: "Password can't be empty",
+    type: 'warning',
   };
   doRegister = async () => {
     const {username, email, password} = this.state;
     console.log(username, email, password);
-    await this.props.signup(username, email, password);
-    if (this.props.auth.authMessage !== '') {
-      this.props.navigation.navigate('Login');
+    try {
+      await this.props.signup(username, email, password);
+      if (this.props.auth.authMessage !== '') {
+        this.props.navigation.navigate('CreatePin');
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
+
+  handleInput = (name, value) => {
+    if (name === 'username') {
+      if (!value) {
+        this.setState({
+          messageUsername: "Username can't be empty",
+          type: 'warning',
+        });
+      } else {
+        this.setState({
+          messageUsername: null,
+          type: 'warning',
+        });
+      }
+    }
+    if (name === 'password') {
+      if (!value) {
+        this.setState({
+          messagePassword: "Password can't be empty",
+          type: 'warning',
+        });
+      } else {
+        this.setState({
+          messagePassword: null,
+          type: 'warning',
+        });
+      }
+    }
+
+    if (name === 'email') {
+      const isEmail = value.match(/[^@$a-z0-9.]/gi);
+      if (!value) {
+        this.setState({
+          messageEmail: "Form can't be empty",
+          type: 'warning',
+        });
+      } else if (
+        isEmail ||
+        !value.match(/@\b/g) ||
+        value.match(/\s/) ||
+        !value.split('@').pop().includes('.')
+      ) {
+        this.setState({
+          messageEmail: 'Invalid Email',
+          type: 'warning',
+        });
+      } else {
+        this.setState({
+          messageEmail: null,
+          type: 'warning',
+        });
+      }
+    }
+
+    this.setState({
+      [name]: value,
+    });
+  };
+
   render() {
     return (
       <Fragment>
@@ -51,23 +119,68 @@ class Register extends Component {
                 <View style={styles.control}>
                   <UsernameField
                     placeholder="Enter your username"
-                    onChangeText={username => this.setState({username})}
+                    onChangeText={username =>
+                      this.handleInput('username', username)
+                    }
                   />
+                  {this.state.messageUsername && (
+                    <Text style={[styles.alert, styles[this.state.type]]}>
+                      {this.state.messageUsername}
+                    </Text>
+                  )}
                 </View>
                 <View style={styles.control}>
                   <EmailField
                     placeholder="Enter your email"
-                    onChangeText={email => this.setState({email})}
+                    onChangeText={email => this.handleInput('email', email)}
                   />
+                  {this.state.messageEmail && (
+                    <Text style={[styles.alert, styles[this.state.type]]}>
+                      {this.state.messageEmail}
+                    </Text>
+                  )}
                 </View>
                 <View style={styles.control}>
                   <PasswordField
                     placeholder="Enter your password"
-                    onChangeText={password => this.setState({password})}
+                    onChangeText={password =>
+                      this.handleInput('password', password)
+                    }
                   />
+                  {this.state.messagePassword && (
+                    <Text style={[styles.alert, styles[this.state.type]]}>
+                      {this.state.messagePassword}
+                    </Text>
+                  )}
+                  {(this.props.auth.authMessage ||
+                    this.props.auth.errMessage) && (
+                    <Text
+                      style={[
+                        styles.alert,
+                        styles.alertSubmit,
+                        styles[this.props.auth.alertType],
+                      ]}>
+                      {this.props.auth.authMessage ||
+                        this.props.auth.errMessage}
+                    </Text>
+                  )}
                 </View>
                 <View style={styles.control}>
-                  <Button onPress={this.doRegister}>Sign Up</Button>
+                  {this.props.auth.loading ? (
+                    <ActivityIndicator color="#00D16C" size="large" />
+                  ) : (
+                    <Button
+                      disabled={
+                        !this.state.messagePassword &&
+                        !this.state.messagePasswordConfirm &&
+                        !this.state.messageUsername
+                          ? false
+                          : true
+                      }
+                      onPress={this.doRegister}>
+                      Sign Up
+                    </Button>
+                  )}
                 </View>
               </View>
               <TouchableOpacity
@@ -116,6 +229,19 @@ const styles = StyleSheet.create({
   },
   link: {
     color: '#00D16C',
+  },
+  alertSubmit: {
+    marginTop: 35,
+    textAlign: 'center',
+  },
+  alert: {
+    marginTop: 15,
+  },
+  primary: {
+    color: '#00D16C',
+  },
+  warning: {
+    color: '#FFC107',
   },
 });
 

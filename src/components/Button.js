@@ -7,6 +7,7 @@ export default function Button(props) {
   return (
     <Fragment>
       <TouchableOpacity
+        disabled={props.disabled ? true : false}
         style={styles.button(props.disabled)}
         onPress={props.onPress}>
         <Text style={styles.text(props.disabled)}>{props.children}</Text>
