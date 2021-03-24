@@ -1,6 +1,5 @@
 import React, {useEffect, Fragment} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {setChat, setContact} from '../redux/actions/chat';
 import io from '../helpers/socket';
 import jwtdecode from 'jwt-decode';
 import {getUserDetail} from './redux/actions/auth';
@@ -25,7 +24,7 @@ export default function Root(props) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, token, id]);
+  }, []);
 
   return <Fragment>{props.children}</Fragment>;
 }
