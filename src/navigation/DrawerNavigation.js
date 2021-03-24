@@ -86,7 +86,6 @@ function DrawerNavigation() {
               ),
             }}
           />
-
           <Drawer.Screen
             name="Result"
             component={ResultTransaction}

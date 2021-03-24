@@ -26,6 +26,7 @@ class AddPhoneNumber extends Component {
     );
     this.props.navigation.navigate('PersonalInfo');
   };
+
   render() {
     return (
       <ScrollView style={styles.container}>
