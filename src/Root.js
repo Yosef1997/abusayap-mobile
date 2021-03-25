@@ -1,32 +1,44 @@
-import React, {useEffect, Fragment} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import React, {Fragment} from 'react';
+import {connect} from 'react-redux';
 import io from './helpers/socket';
-import jwtdecode from 'jwt-decode';
 import {getUserDetail} from './redux/actions/auth';
+import {
+  newHistoryTransaction,
+  historyTransaction,
+} from './redux/actions/transaction';
 
-export default function Root(props) {
-  const dispatch = useDispatch();
-  const token = useSelector(c => c.auth.token);
+class Root extends React.Component {
+  componentDidMount() {
+    io.onAny(() => {
+      if (this.props.auth.token) {
+        const {
+          token,
+          user: {id},
+        } = this.props.auth;
+        io.once(`Receive_Transaction_${id}`, async msg => {
+          await this.props.getUserDetail(token, id);
+          await this.props.historyTransaction(this.props.auth.token);
+        });
+        io.once(`Update_Top_Up_${id}`, msg => {
+          this.props.getUserDetail(this.props.auth.token, id);
+        });
+      }
+    });
+  }
 
-  useEffect(() => {
-    if (token) {
-      const decode = jwtdecode(token);
-      // console.log('====== ID =====', decode.id)
-      io.on(`Receive_Transaction_${decode.id}`, msg => {
-        console.log(msg);
-        console.log('====== ID =====', decode.id);
-
-        dispatch(getUserDetail(token, decode.id));
-      });
-
-      io.once(`Update_Top_Up_${decode.id}`, msg => {
-        console.log(msg);
-        dispatch(getUserDetail(token), decode.id);
-      });
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return <Fragment>{props.children}</Fragment>;
+  render() {
+    return <Fragment>{this.props.children}</Fragment>;
+  }
 }
+
+const mapStateToProps = states => ({
+  auth: states.auth,
+});
+
+const mapDispatchToProps = {
+  getUserDetail,
+  historyTransaction,
+  newHistoryTransaction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Root);

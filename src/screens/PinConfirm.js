@@ -15,6 +15,7 @@ import {
   newHistoryTransaction,
   // historyTransaction,
 } from '../redux/actions/transaction';
+import moment from 'moment';
 import {updateProfile} from '../redux/actions/auth';
 import http from '../helpers/http';
 
@@ -47,7 +48,10 @@ class PinConfirm extends Component {
       form.append('amount', this.props.transaction.transactionInfo.amount);
       form.append('notes', this.props.transaction.transactionInfo.note);
       form.append('status', 'transfer');
-      form.append('dateTransaction', new Date());
+      form.append(
+        'dateTransaction',
+        moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
+      );
       form.append('pin', this.state.pin);
       await http(this.props.profile.token).post('/transaction', form);
       const profile = await http(this.props.profile.token).get(
