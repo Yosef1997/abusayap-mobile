@@ -56,7 +56,10 @@ class PinConfirm extends Component {
       const historyTrans = await http(this.props.profile.token).get(
         '/transaction/history?search=&page=1&limit=4&offset=0&sort=createdAt&order=DESC',
       );
-      this.props.newHistoryTransaction(historyTrans.data.results);
+      this.props.newHistoryTransaction(
+        historyTrans.data.results,
+        historyTrans.data.pageInfo,
+      );
       this.props.updateProfile(profile.data.results);
       this.setState({isLoading: false});
       this.props.navigation.navigate('Result');
