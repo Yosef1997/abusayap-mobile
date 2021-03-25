@@ -52,5 +52,6 @@ const styles = StyleSheet.create({
   },
   textInput: {
     height: 50,
+    color: 'black',
   },
 });

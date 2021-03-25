@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import Button from '../components/ButtonProfile';
+import Button from '../components/Button';
 import PinField from '../components/PinField';
 import {connect} from 'react-redux';
 import {updateUser} from '../redux/actions/UpdateProfile';
@@ -16,20 +18,42 @@ import {updateUser} from '../redux/actions/UpdateProfile';
 class ChangePin extends Component {
   state = {
     pin: '',
+    isDisabled: true,
+    loading: false,
   };
-  doChangePin = async () => {
-    const {pin} = this.state;
-    await this.props.updateUser(
-      this.props.auth.token,
-      this.props.auth.user.id,
-      {pin: pin},
-    );
-    this.setState({pin: ''});
-  };
+
   handlePin = value => {
+    if (value.match(/[^0-9]/gi) !== null || value.length < 6) {
+      this.setState({
+        isDisabled: true,
+      });
+    } else {
+      this.setState({
+        isDisabled: false,
+      });
+    }
     this.setState({
       pin: value,
     });
+  };
+
+  doChangePin = async () => {
+    const {pin} = this.state;
+    this.setState({loading: true});
+    try {
+      await this.props.updateUser(
+        this.props.auth.token,
+        this.props.auth.user.id,
+        {pin: pin},
+      );
+      this.setState({loading: false});
+      this.setState({pin: ''});
+      Alert.alert('Change Pin Success');
+    } catch (err) {
+      console.log(err);
+      this.setState({loading: true});
+      Alert.alert('Change Pin Failed');
+    }
   };
   render() {
     return (
@@ -48,7 +72,17 @@ class ChangePin extends Component {
         <View style={styles.control}>
           <PinField value={this.state.pin} onChangeText={this.handlePin} />
         </View>
-        <Button label="Change Pin" onPress={this.doChangePin} />
+        <View style={styles.control}>
+          {!this.state.isDisabled ? (
+            this.state.loading ? (
+              <ActivityIndicator color="#00D16C" size="large" />
+            ) : (
+              <Button onPress={this.doChangePin}>Change Pin</Button>
+            )
+          ) : (
+            <Button disabled>Change Pin</Button>
+          )}
+        </View>
       </ScrollView>
     );
   }
@@ -85,6 +119,7 @@ const styles = StyleSheet.create({
   control: {
     alignItems: 'center',
     marginVertical: 50,
+    marginHorizontal: 16,
   },
 });
 
