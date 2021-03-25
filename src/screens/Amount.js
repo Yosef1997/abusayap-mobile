@@ -26,7 +26,7 @@ import Container from '../components/Container';
 
 class Amount extends Component {
   state = {
-    amount: 0,
+    amount: '',
     amountNum: 0,
     note: '',
   };
