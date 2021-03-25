@@ -7,17 +7,157 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
+import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
+import {TextInput} from 'react-native-gesture-handler';
+import moment from 'moment';
+import {connect} from 'react-redux';
+import {topUp} from '../redux/actions/transaction';
 
-export default class App extends Component {
+class App extends Component {
+  state = {
+    modalVisible: false,
+    amount: '',
+  };
+  setModalVisible = visible => {
+    this.setState({modalVisible: visible});
+  };
+  addPhotoCamera = async () => {
+    this.setState({modalVisible: false});
+    const {amount} = this.state;
+    const dateTransaction = new Date();
+    launchCamera(
+      {
+        quality: 0.3,
+      },
+      async response => {
+        if (response.didCancel) {
+          // Alert('User cancelled upload image');
+          this.props.dispatch({
+            type: 'TOPUP_MESSAGE',
+            payload: 'User cancelled upload image',
+          });
+        } else if (response.errorMessage) {
+          // Alert('Image Error: ', response.errorMessage);
+          this.props.dispatch({
+            type: 'TOPUP_MESSAGE',
+            payload: `Image Error: ${response.errorMessage}`,
+          });
+        } else if (response.fileSize >= 1 * 1024 * 1024) {
+          // Alert('Image to large');
+          this.props.dispatch({
+            type: 'TOPUP_MESSAGE',
+            payload: 'Image to large',
+          });
+        } else {
+          const dataImage = {
+            uri: response.uri,
+            type: response.type,
+            name: response.fileName,
+          };
+          await this.props.topUp(this.props.auth.token, {
+            amount: amount,
+            picture: dataImage,
+            dateTransaction: moment(dateTransaction).format(
+              'YYYY-MM-DD hh:mm:ss',
+            ),
+          });
+          // Alert(this.props.transaction.topUpMessage, 'success');
+          this.props.dispatch({
+            type: 'TOP_UP',
+          });
+        }
+      },
+    );
+  };
+  addPhotoGallery = async () => {
+    this.setState({modalVisible: false});
+    const {amount} = this.state;
+    const dateTransaction = new Date();
+    launchImageLibrary({}, async response => {
+      if (response.didCancel) {
+        // Alert('User cancelled upload image');
+        this.props.dispatch({
+          type: 'TOPUP_MESSAGE',
+          payload: 'User cancelled upload image',
+        });
+      } else if (response.errorMessage) {
+        // Alert('Image Error: ', response.errorMessage);
+        this.props.dispatch({
+          type: 'TOPUP_MESSAGE',
+          payload: `Image Error: ${response.errorMessage}`,
+        });
+      } else if (response.fileSize >= 1 * 1024 * 1024) {
+        // Alert('Image to large');
+        this.props.dispatch({
+          type: 'TOPUP_MESSAGE',
+          payload: 'Image to large',
+        });
+      } else {
+        const dataImage = {
+          uri: response.uri,
+          type: response.type,
+          name: response.fileName,
+        };
+        console.log(dataImage);
+        await this.props.topUp(this.props.auth.token, {
+          amount: amount,
+          picture: dataImage,
+          dateTransaction: moment(dateTransaction).format(
+            'YYYY-MM-DD hh:mm:ss',
+          ),
+        });
+        // Alert(this.props.transaction.topUpMessage, 'success');
+        this.props.dispatch({
+          type: 'TOPUP_MESSAGE',
+          payload: 'Image to large',
+        });
+      }
+    });
+  };
+
   render() {
+    const {modalVisible} = this.state;
     return (
       <>
         <StatusBar backgroundColor="#00D16C" />
         <View style={styles.header}>
           <View style={styles.row2}>
-            <TouchableOpacity style={styles.btn}>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                this.setModalVisible(!modalVisible);
+              }}>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <Text style={styles.modalTitle}>Top UP Confirmation</Text>
+                  <View style={styles.inputTopUp}>
+                    <Text>Rp</Text>
+                    <TextInput
+                      placeholder="Input Top Up"
+                      onChangeText={amount => this.setState({amount})}
+                    />
+                  </View>
+                  <TouchableOpacity
+                    style={[styles.button, styles.buttonOpen]}
+                    onPress={this.addPhotoCamera}>
+                    <Text style={styles.text2Style}>Open camera</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, styles.buttonOpen]}
+                    onPress={this.addPhotoGallery}>
+                    <Text style={styles.text2Style}>Open gallery</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => this.setModalVisible(true)}>
               <Icon name="plus" size={25} color="#00D16C" />
             </TouchableOpacity>
             <View>
@@ -69,7 +209,7 @@ export default class App extends Component {
             <View style={styles.card}>
               <Text style={styles.cardNumber}>8</Text>
               <Text style={styles.cardText}>
-                You can see your money in Zwallet{'\n'}within 3 hours.
+                You can see your money in Abusayap{'\n'}within 3 hours.
               </Text>
             </View>
           </View>
@@ -156,4 +296,70 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 12,
+    padding: 10,
+    elevation: 2,
+    marginBottom: 10,
+  },
+  buttonOpen: {
+    backgroundColor: 'white',
+  },
+  buttonClose: {
+    backgroundColor: '#00D16C',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  text2Style: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  inputTopUp: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#00D16C',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginBottom: 20,
+  },
 });
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  transaction: state.transaction,
+});
+const mapDispatchToProps = {topUp};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

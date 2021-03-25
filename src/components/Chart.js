@@ -8,8 +8,7 @@ const chartConfig = {
   backgroundGradientFrom: '#fafcff',
   backgroundGradientTo: '#fafcff',
   color: (opacity = 1) => `rgba(143, 143, 143, ${opacity})`,
-  strokeWidth: 2, // optional, default 3
-  barPercentage: 0.5,
+  strokeWidth: 5, // optional, default 3
   useShadowColorFromDataset: false, // optional
 };
 const data = {

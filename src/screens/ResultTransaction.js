@@ -9,69 +9,79 @@ import {
 } from 'react-native';
 import MainHeader from '../components/MainHeader';
 import success from '../assets/images/success.png';
-import failed from '../assets/images/failed.png';
+import moment from 'moment';
 import ProfileSelected from '../components/ProfileSelected';
 import {useNavigation} from '@react-navigation/core';
-import {useState} from 'react/cjs/react.development';
+import {useSelector} from 'react-redux';
+import rupiah from '../helpers/rupiah';
 
 const ResultTransaction = () => {
   const navigation = useNavigation();
-  const [isSucces, setIsSuccess] = useState(false);
+  const transactionInfo = useSelector(
+    state => state.transaction.transactionInfo,
+  );
+  const contactFocus = useSelector(state => state.transaction.contactFocus);
+  const user = useSelector(state => state.auth.user);
   return (
     <>
       <MainHeader>
         <Text style={style.titleHeader}>Transfer Details</Text>
       </MainHeader>
       <ScrollView>
-        {isSucces === true ? (
-          <View style={style.rowIcon}>
-            <Image source={success} style={style.iconSuccess} />
-            <Text style={style.textTransfer}>Transfer Success</Text>
-          </View>
-        ) : (
-          <View style={style.rowIcon}>
-            <Image source={failed} style={style.iconSuccess} />
-            <Text style={style.textTransfer}>Transfer Failed</Text>
-            <Text style={style.paragraph}>
-              We can’t transfer your money at the moment, we recommend you to
-              check your internet connection and try again.
-            </Text>
-          </View>
-        )}
+        <View style={style.rowIcon}>
+          <Image source={success} style={style.iconSuccess} />
+          <Text style={style.textTransfer}>Transfer Success</Text>
+        </View>
         <View style={style.parentWrapp}>
           <View style={style.row}>
             <View style={style.card}>
               <Text style={style.textTitle}>Amount</Text>
-              <Text style={style.textBodyCard}>Rp100.000</Text>
+              <Text style={style.textBodyCard}>
+                Rp. {rupiah(transactionInfo.amount)}
+              </Text>
             </View>
             <View style={style.card}>
               <Text style={style.textTitle}>Balance Left</Text>
-              <Text style={style.textBodyCard}>Rp20.000</Text>
+              <Text style={style.textBodyCard}>Rp. {rupiah(user.balance)}</Text>
             </View>
           </View>
           <View style={style.row}>
             <View style={style.card}>
               <Text style={style.textTitle}>Date</Text>
-              <Text style={style.textBodyCard}>May 11, 2020</Text>
+              <Text style={style.textBodyCard}>
+                {moment(transactionInfo.date).format('ll')}
+              </Text>
             </View>
             <View style={style.card}>
               <Text style={style.textTitle}>Time</Text>
-              <Text style={style.textBodyCard}>12.20</Text>
+              <Text style={style.textBodyCard}>
+                {moment(transactionInfo.date).format('LT')}
+              </Text>
             </View>
           </View>
           <View style={style.row}>
             <View style={style.cardNote}>
               <Text style={style.textTitle}>Notes</Text>
-              <Text style={style.textBodyCard}>For buying some socks</Text>
+              <Text style={style.textBodyCard}>{transactionInfo.note}</Text>
             </View>
           </View>
           <View style={style.rowProfileSelected}>
             <Text style={style.textFrom}>From</Text>
-            <ProfileSelected />
+            <ProfileSelected
+              name={`${user.firstname} ${user.lastname}`}
+              email={user.email}
+              picture={user.picture}
+              phoneNumber={user.phoneNumber}
+            />
           </View>
           <View style={style.rowProfileSelected}>
             <Text style={style.textFrom}>To</Text>
-            <ProfileSelected />
+            <ProfileSelected
+              name={contactFocus.name}
+              email={contactFocus.email}
+              picture={contactFocus.picture}
+              phoneNumber={contactFocus.phoneNumber}
+            />
           </View>
           <TouchableOpacity
             style={style.btnContinue}

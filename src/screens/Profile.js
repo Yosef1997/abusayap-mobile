@@ -33,23 +33,24 @@ class Profile extends Component {
       },
       async response => {
         if (response.didCancel) {
-          Alert('User cancelled upload image');
+          Alert.alert('User cancelled upload image');
         } else if (response.errorMessage) {
-          Alert('Image Error: ', response.errorMessage);
+          Alert.alert('Image Error: ', response.errorMessage);
         } else if (response.fileSize >= 1 * 1024 * 1024) {
-          Alert('Image to large');
+          Alert.alert('Image to large');
         } else {
           const dataImage = {
             uri: response.uri,
             type: response.type,
             name: response.fileName,
           };
+          console.log(dataImage);
           await this.props.updateUser(
             this.props.auth.token,
             this.props.auth.user.id,
             {picture: dataImage},
           );
-          Alert(this.props.auth.message, 'success');
+          // Alert(this.props.auth.message, 'success');
         }
       },
     );
@@ -58,11 +59,11 @@ class Profile extends Component {
     this.setState({modalVisible: false});
     launchImageLibrary({}, async response => {
       if (response.didCancel) {
-        Alert('User cancelled upload image');
+        Alert.alert('User cancelled upload image');
       } else if (response.errorMessage) {
-        Alert('Image Error: ', response.errorMessage);
+        Alert.alert('Image Error: ', response.errorMessage);
       } else if (response.fileSize >= 1 * 1024 * 1024) {
-        Alert('Image to large');
+        Alert.alert('Image to large');
       } else {
         const dataImage = {
           uri: response.uri,
@@ -74,7 +75,7 @@ class Profile extends Component {
           this.props.auth.user.id,
           {picture: dataImage},
         );
-        Alert(this.props.auth.message, 'success');
+        // Alert(this.props.auth.message, 'success');
       }
     });
   };

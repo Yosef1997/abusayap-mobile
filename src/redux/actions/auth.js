@@ -85,6 +85,10 @@ export const signin = (email, password) => {
 export const signout = () => ({
   type: 'SIGNOUT',
 });
+export const updateProfile = data => ({
+  type: 'UPDATE_PROFILE',
+  payload: data,
+});
 
 export const setId = id => ({
   type: 'SET_ID',
