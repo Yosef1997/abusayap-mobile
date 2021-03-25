@@ -2,6 +2,7 @@ const initialState = {
   history: [],
   pageInfoTransaction: null,
   listContact: [],
+  pageInfoContact: null,
   contactFocus: null,
   transactionInfo: null,
   statusSend: null,
@@ -36,6 +37,11 @@ const transactionReducer = (state = initialState, action) => {
       return {
         ...state,
         listContact: action.payload,
+      };
+    case 'PAGE_INFO_LIST_CONTACT':
+      return {
+        ...state,
+        pageInfoContact: action.payload,
       };
     case 'CONTACT_FOCUS':
       return {
