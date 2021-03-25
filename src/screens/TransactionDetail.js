@@ -113,26 +113,35 @@ const TransactionDetail = () => {
         </View>
       </View>
       <View style={style.flatListWrapper}>
-        <FlatList
-          data={historyTransaction}
-          keyExtractor={(item, index) => String(index)}
-          renderItem={({item}) => {
-            return (
-              <ListTransaction
-                id={item.id}
-                name={item.name}
-                amount={item.amount}
-                isTransfer={item.userAs}
-                picture={item.picture}
-                createdAt={item.createdAt}
-              />
-            );
-          }}
-          refreshing={listRefresh}
-          onRefresh={fetchNewData}
-          onEndReached={nextData}
-          onEndReachedThreshold={1}
-        />
+        {historyTransaction === 'No transactions' ? (
+          <>
+            <View style={style.rowTextDontHaveTrans}>
+              <Text style={style.textBold}>You don't have a transaction</Text>
+            </View>
+          </>
+        ) : (
+          <FlatList
+            data={historyTransaction}
+            keyExtractor={(item, index) => String(item.id)}
+            renderItem={({item}) => {
+              return (
+                <ListTransaction
+                  id={item.id}
+                  name={item.name}
+                  amount={item.amount}
+                  isTransfer={item.userAs}
+                  picture={item.picture}
+                  createdAt={item.createdAt}
+                />
+              );
+            }}
+            refreshing={listRefresh}
+            onRefresh={fetchNewData}
+            onEndReached={nextData}
+            onEndReachedThreshold={0.5}
+            // ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
+          />
+        )}
       </View>
     </>
   );
@@ -148,6 +157,17 @@ const style = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     marginLeft: 22,
+  },
+  rowTextDontHaveTrans: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textBold: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'red',
   },
   rowHeader: {
     height: 50,

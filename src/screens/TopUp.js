@@ -157,6 +157,7 @@ class App extends Component {
                     <TextInput
                       placeholder="Input Top Up"
                       keyboardType="number-pad"
+                      style={styles.textInput}
                       onChangeText={amount => this.setState({amount})}
                     />
                   </View>
@@ -394,6 +395,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#7A7886',
     marginBottom: 25,
+  },
+  textInput: {
+    color: 'black',
   },
 });
 
