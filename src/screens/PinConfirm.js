@@ -63,7 +63,7 @@ class PinConfirm extends Component {
       this.props.navigation.navigate('Result');
     } catch (err) {
       this.setState({messageRes: err.response.data.message});
-      this.setState({isLoading: true});
+      this.setState({isLoading: false});
     }
   };
 
