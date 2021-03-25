@@ -21,9 +21,12 @@ import {REACT_APP_API_URL as API_URL} from '@env';
 class Profile extends Component {
   state = {
     modalVisible: false,
+    message: false,
+    success: false,
+    loading: false,
   };
-  setModalVisible = visible => {
-    this.setState({modalVisible: visible});
+  setModalVisible = value => {
+    this.setState({modalVisible: value});
   };
   addPhotoCamera = async () => {
     this.setState({modalVisible: false});
@@ -31,53 +34,50 @@ class Profile extends Component {
       {
         quality: 0.3,
       },
-      async response => {
-        if (response.didCancel) {
-          Alert.alert('User cancelled upload image');
-        } else if (response.errorMessage) {
-          Alert.alert('Image Error: ', response.errorMessage);
-        } else if (response.fileSize >= 1 * 1024 * 1024) {
-          Alert.alert('Image to large');
-        } else {
-          const dataImage = {
-            uri: response.uri,
-            type: response.type,
-            name: response.fileName,
-          };
-          console.log(dataImage);
-          await this.props.updateUser(
-            this.props.auth.token,
-            this.props.auth.user.id,
-            {picture: dataImage},
-          );
-          // Alert(this.props.auth.message, 'success');
-        }
-      },
+      response => this.changeImage(response),
     );
   };
   addPhotoGallery = async () => {
     this.setState({modalVisible: false});
-    launchImageLibrary({}, async response => {
+    launchImageLibrary(
+      {
+        quality: 0.3,
+      },
+      response => this.changeImage(response),
+    );
+  };
+  changeImage = async response => {
+    try {
       if (response.didCancel) {
-        Alert.alert('User cancelled upload image');
+        this.setState({message: 'Cancelled change picture'});
       } else if (response.errorMessage) {
-        Alert.alert('Image Error: ', response.errorMessage);
+        this.setState({message: `Image Error: ${response.errorMessage}`});
       } else if (response.fileSize >= 1 * 1024 * 1024) {
-        Alert.alert('Image to large');
-      } else {
+        this.setState({message: 'Image to large'});
+      } else if (response) {
         const dataImage = {
           uri: response.uri,
           type: response.type,
           name: response.fileName,
         };
+        this.setState({loading: true});
         await this.props.updateUser(
           this.props.auth.token,
           this.props.auth.user.id,
           {picture: dataImage},
         );
-        // Alert(this.props.auth.message, 'success');
+        await this.setState({loading: false});
+        await this.setState({success: this.props.auth.authMessage});
+      } else {
+        this.setState({message: false});
       }
-    });
+      setTimeout(() => {
+        this.setState({message: false});
+        this.setState({success: false});
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+    };
   };
   doDeletePicture = async () => {
     await this.props.deletePicture(
@@ -86,6 +86,7 @@ class Profile extends Component {
     );
     this.setState({modalVisible: false});
   };
+
   render() {
     const {modalVisible} = this.state;
     const {user} = this.props.auth;
@@ -135,6 +136,9 @@ class Profile extends Component {
             name={`${user.firstname} ${user.lastname}`}
             phone={user.phoneNumber}
             onPress={() => this.setModalVisible(true)}
+            error={this.state.message}
+            success={this.state.success}
+            loading={this.state.loading}
           />
           <Card
             label="Personal Information"

@@ -19,12 +19,13 @@ export const updateUser = (token, id, data) => {
         message: results.data.message,
       });
     } catch (err) {
-      console.log(err);
-      const {message} = err.response.data;
-      dispatch({
-        type: 'SET_MESSAGE',
-        payload: message,
-      });
+      if (err.response) {
+        const {message} = err.response.data;
+        dispatch({
+          type: 'SET_MESSAGE',
+          payload: message,
+        });
+      }
     }
   };
 };

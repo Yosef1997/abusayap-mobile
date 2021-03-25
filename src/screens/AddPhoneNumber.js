@@ -27,6 +27,13 @@ class AddPhoneNumber extends Component {
     this.props.navigation.navigate('PersonalInfo');
   };
 
+  changeText = (key, value) => {
+    try {
+      this.setState({[key]: value});
+    } catch (error) {
+      console.log(error);
+    }
+  };
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -43,9 +50,10 @@ class AddPhoneNumber extends Component {
           start transfering your money to{'\n'}another user.
         </Text>
         <InputPhone
-          onChangeText={phoneNumber => this.setState({phoneNumber})}
+          value={this.state.phoneNumber}
+          onChangeText={value => this.changeText('phoneNumber', value)}
         />
-        <Button label="Submit" onPress={this.doUpdatePhone} />
+        <Button label="Submit" onPress={() => this.doUpdatePhone()} />
       </ScrollView>
     );
   }
