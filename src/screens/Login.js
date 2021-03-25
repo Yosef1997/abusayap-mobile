@@ -106,7 +106,7 @@ class Login extends Component {
                     placeholder="Enter your email"
                     onChangeText={email => this.handleInput('email', email)}
                   />
-                  {this.state.messageEmail && (
+                  {this.state.email !== '' && this.state.messageEmail && (
                     <Text style={[styles.alert, styles[this.state.type]]}>
                       {this.state.messageEmail}
                     </Text>
@@ -119,7 +119,7 @@ class Login extends Component {
                       this.handleInput('password', password)
                     }
                   />
-                  {this.state.messagePassword && (
+                  {this.state.password !== '' && this.state.messagePassword && (
                     <Text style={[styles.alert, styles[this.state.type]]}>
                       {this.state.messagePassword}
                     </Text>
