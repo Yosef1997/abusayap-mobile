@@ -1,10 +1,72 @@
 import React, {Component} from 'react';
-import {Text, View, ScrollView, StatusBar, StyleSheet} from 'react-native';
+import {
+  Text,
+  View,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import PinField from '../components/PinField';
 import Button from '../components/Button';
-import Chart from '../components/Chart';
+import {connect} from 'react-redux';
+import {
+  sendAmount,
+  newHistoryTransaction,
+  historyTransaction,
+} from '../redux/actions/transaction';
+import {updateProfile} from '../redux/actions/auth';
+import http from '../helpers/http';
 
-export default class PinConfirm extends Component {
+class PinConfirm extends Component {
+  state = {
+    pin: '',
+    messageRes: '',
+    isLoading: false,
+  };
+  doChangePin = async () => {
+    const {pin} = this.state;
+    await this.props.updateUser(
+      this.props.auth.token,
+      this.props.auth.user.id,
+      {pin: pin},
+    );
+    this.setState({pin: ''});
+  };
+  handlePin = value => {
+    this.setState({
+      pin: value,
+    });
+  };
+
+  sendAmountFix = async () => {
+    try {
+      this.setState({isLoading: true});
+      const form = new URLSearchParams();
+      form.append('idReceiver', this.props.transaction.contactFocus.id);
+      form.append('amount', this.props.transaction.transactionInfo.amount);
+      form.append('notes', this.props.transaction.transactionInfo.note);
+      form.append('status', 'transfer');
+      form.append('dateTransaction', new Date());
+      form.append('pin', this.state.pin);
+      await http(this.props.profile.token).post('/transaction', form);
+      const profile = await http(this.props.profile.token).get(
+        `/user/${this.props.profile.user.id}`,
+      );
+      const historyTrans = await http(this.props.profile.token).get(
+        '/transaction/history?search=&page=1&limit=4&offset=0&sort=createdAt&order=DESC',
+      );
+      this.props.newHistoryTransaction(historyTrans.data.results);
+      this.props.updateProfile(profile.data.results);
+      this.setState({isLoading: false});
+
+      this.props.navigation.navigate('Result');
+    } catch (err) {
+      this.setState({messageRes: err.response.data.message});
+      this.setState({isLoading: true});
+    }
+  };
+
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -14,14 +76,18 @@ export default class PinConfirm extends Component {
           Enter your 6 digits PIN for confirmation to{'\n'}continue transferring
           money.
         </Text>
+        {this.state.messageRes !== '' && (
+          <Text style={styles.info}>{this.state.messageRes}</Text>
+        )}
         <View style={styles.control}>
-          <PinField />
+          <PinField value={this.state.pin} onChangeText={this.handlePin} />
         </View>
         <View style={styles.btn}>
-          <Button>Transfer Now</Button>
-        </View>
-        <View>
-          <Chart />
+          {this.state.isLoading === true ? (
+            <ActivityIndicator size="large" color="black" />
+          ) : (
+            <Button onPress={() => this.sendAmountFix()}>Transfer Now</Button>
+          )}
         </View>
       </ScrollView>
     );
@@ -55,3 +121,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
 });
+
+const mapStateToProps = state => ({
+  transaction: state.transaction,
+  profile: state.auth,
+});
+const mapDispatchToProps = {sendAmount, updateProfile, newHistoryTransaction};
+export default connect(mapStateToProps, mapDispatchToProps)(PinConfirm);
