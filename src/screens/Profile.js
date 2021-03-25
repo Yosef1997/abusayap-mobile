@@ -129,7 +129,7 @@ class Profile extends Component {
             source={
               user.picture !== null
                 ? {
-                    uri: API_URL.concat(`/upload/profile/${user.picture}`),
+                    uri: `${API_URL}/upload/profile/${user.picture}`,
                   }
                 : ProfilImg
             }
