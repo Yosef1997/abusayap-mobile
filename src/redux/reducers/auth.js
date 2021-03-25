@@ -68,7 +68,7 @@ const authReducer = (state = intialState, action) => {
         ...state,
         loading: !state.loading,
         errorMsg: action.payload,
-        authMessage: '',
+        authMessage: null,
       };
     case 'SIGNOUT':
       return {

@@ -36,7 +36,7 @@ class Register extends Component {
     console.log(username, email, password);
     try {
       await this.props.signup(username, email, password);
-      if (!this.props.auth.authMessage && !this.props.auth.errorMessage) {
+      if (this.props.auth.authMessage !== '') {
         this.props.navigation.navigate('CreatePin');
       }
     } catch (err) {

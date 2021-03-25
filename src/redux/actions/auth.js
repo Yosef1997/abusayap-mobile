@@ -95,11 +95,7 @@ export const getUserDetail = (token, id) => {
   return async dispatch => {
     try {
       const {data} = await http(token).get('/user/' + id);
-      dispatch({
-        type: 'SET_AUTH_MESSAGE',
-        authMessage: data.message,
-        alertType: 'primary',
-      });
+      console.log('====== DATA =====', data);
       dispatch({
         type: 'SET_USER',
         user: data.results,
@@ -107,9 +103,12 @@ export const getUserDetail = (token, id) => {
     } catch (err) {
       dispatch({
         type: 'SET_MESSAGE',
-        errMessage: err.data.response.message,
-        alertType: 'warning',
+        payload: {
+          message: err.response.data.message,
+          type: 'warning',
+        },
       });
+      console.log(err.response.data.message);
     }
   };
 };
