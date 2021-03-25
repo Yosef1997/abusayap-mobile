@@ -11,6 +11,24 @@ import ListContact from '../components/CardContact';
 import {connect} from 'react-redux';
 
 class SearchReceiver extends Component {
+  // state = {
+  //   listRefresh: false,
+  // }
+
+  // fetchNewData = async () => {
+  //     try {
+  //       this.setState({listRefresh: true})
+  //       const oldData = historyTransaction;
+  //       const response = await http(token).get(`${nextPage.nextLink}`);
+  //       const resultResponse = response.data.results;
+  //       dispatch(pageInfoHistoryTransaction(response.data.pageInfo));
+  //       const newData = [...oldData, ...resultResponse];
+  //       dispatch(newHistoryTransaction(newData));
+  //       setListRefresh(false);
+  //     } catch (err) {
+  //       console.log(err.response.data.message);
+  //     }
+  // }
   render() {
     return (
       <>
@@ -44,6 +62,11 @@ class SearchReceiver extends Component {
                   />
                 );
               }}
+              // refreshing={listRefresh}
+              // onRefresh={fetchNewData}
+              // onEndReached={nextData}
+              // onEndReachedThreshold={1}
+              // ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
             />
           )}
         </View>
