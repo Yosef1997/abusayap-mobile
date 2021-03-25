@@ -74,7 +74,7 @@ const authReducer = (state = intialState, action) => {
       return {
         ...state,
         token: null,
-        authMessage: '',
+        authMessage: null,
       };
     case 'UPDATE_PROFILE':
       return {
