@@ -16,6 +16,7 @@ import LoadMore from '../components/LoadMore';
 class SearchReceiver extends Component {
   state = {
     listRefresh: false,
+    nextLink: '',
   };
 
   fetchNewData = async () => {
@@ -86,11 +87,7 @@ class SearchReceiver extends Component {
               onRefresh={this.fetchNewData}
               onEndReached={this.nextData}
               onEndReachedThreshold={1}
-              ListFooterComponent={
-                <LoadMore
-                  nextLink={this.props.contact.pageInfoContact.nextLink}
-                />
-              }
+              ListFooterComponent={<LoadMore nextLink={null} />}
             />
           )}
         </View>

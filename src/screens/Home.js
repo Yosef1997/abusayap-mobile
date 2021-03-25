@@ -39,22 +39,20 @@ const Home = () => {
 
   const fetchNewData = async () => {
     try {
-      setListRefresh(true);
       const oldData = historyTransactionData;
       const response = await http(token).get(`${nextPage.nextLink}`);
       const resultResponse = response.data.results;
       dispatch(pageInfoHistoryTransaction(response.data.pageInfo));
       const newData = [...oldData, ...resultResponse];
       dispatch(newHistoryTransaction(newData));
-      setListRefresh(false);
     } catch (err) {
       console.log(err.response.data.message);
     }
   };
 
   const nextData = async () => {
-    const oldData = historyTransactionData;
     try {
+      const oldData = historyTransactionData;
       const response = await http(token).get(`${nextPage.nextLink}`);
       const resultResponse = response.data.results;
       dispatch(pageInfoHistoryTransaction(response.data.pageInfo));
