@@ -9,7 +9,7 @@ export const updateUser = (token, id, data) => {
       });
       console.log(form);
       dispatch({
-        type: 'SET_MESSAGE',
+        type: 'REMOVE_MESSAGE',
         payload: '',
       });
       const results = await http(token).patch(`/user/${id}`, form);
@@ -23,7 +23,7 @@ export const updateUser = (token, id, data) => {
         const {message} = err.response.data;
         dispatch({
           type: 'SET_MESSAGE',
-          payload: message,
+          payload: {message},
         });
       }
     }

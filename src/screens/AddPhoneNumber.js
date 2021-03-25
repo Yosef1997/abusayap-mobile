@@ -9,13 +9,14 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import InputPhone from '../components/InputPhone';
-import Button from '../components/ButtonProfile';
+import Button from '../components/Button';
 import {connect} from 'react-redux';
 import {updateUser} from '../redux/actions/UpdateProfile';
 
 class AddPhoneNumber extends Component {
   state = {
     phoneNumber: '',
+    message: '',
   };
   doUpdatePhone = async () => {
     const {phoneNumber} = this.state;
@@ -28,13 +29,16 @@ class AddPhoneNumber extends Component {
   };
 
   changeText = (key, value) => {
-    try {
-      this.setState({[key]: value});
-    } catch (error) {
-      console.log(error);
+    this.setState({[key]: value.toString().replace(/[^0-9]/g, '')});
+    if (value.length < 10) {
+      this.setState({message: 'Phone number must have at least 9 characters'});
+    } else {
+      this.setState({message: ''});
     }
+    console.log(this.state.message);
   };
   render() {
+    const {phoneNumber, message} = this.state;
     return (
       <ScrollView style={styles.container}>
         <StatusBar backgroundColor="#00D16C" />
@@ -53,7 +57,17 @@ class AddPhoneNumber extends Component {
           value={this.state.phoneNumber}
           onChangeText={value => this.changeText('phoneNumber', value)}
         />
-        <Button label="Submit" onPress={() => this.doUpdatePhone()} />
+        {phoneNumber !== '' && message !== '' && (
+          <Text style={styles.error}>{message}</Text>
+        )}
+        <View style={styles.button}>
+          <Button
+            style={styles.button}
+            onPress={() => this.doUpdatePhone()}
+            disabled={phoneNumber === '' || message !== ''}>
+            Submit
+          </Button>
+        </View>
       </ScrollView>
     );
   }
@@ -86,6 +100,17 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     marginTop: 40,
     marginBottom: 20,
+  },
+  error: {
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'normal',
+    marginTop: 10,
+  },
+  button: {
+    marginHorizontal: 10,
+    marginLeft: 10,
   },
 });
 
