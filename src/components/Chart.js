@@ -1,40 +1,37 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {StackedBarChart} from 'react-native-svg-charts';
+import http from '../helpers/http';
+import {connect} from 'react-redux';
 
-export default class Chart extends Component {
+class Chart extends Component {
+  state = {
+    day: [],
+    amount: [],
+  };
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  async fetchData ()  {
+    try {
+      const {token} = this.props.auth;
+      const response = await http(token).get('chart');
+      await this.setState({
+        day: response.data.results.map(item => item.day),
+        amount: response.data.results.map(item => ({
+          expense: item.asSender,
+          income: item.asReceiver,
+        })),
+      });
+      console.log(this.state.day);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   render() {
-    const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const data = [
-      {
-        expense: 2000,
-        income: 1920,
-      },
-      {
-        expense: 1600,
-        income: 1440,
-      },
-      {
-        expense: 640,
-        income: 960,
-      },
-      {
-        expense: 3320,
-        income: 480,
-      },
-      {
-        expense: 3320,
-        income: 480,
-      },
-      {
-        expense: 3320,
-        income: 480,
-      },
-      {
-        expense: 3320,
-        income: 480,
-      },
-    ];
+    const labels = this.state.day;
+    const data = this.state.amount;
     const colors = ['#9DA6B5', '#00D16C'];
     const keys = ['expense', 'income'];
     return (
@@ -67,3 +64,9 @@ const styles = StyleSheet.create({
     marginLeft: -5,
   },
 });
+
+const mapStateToProps = props => ({
+  auth: props.auth,
+});
+
+export default connect(mapStateToProps)(Chart);
