@@ -63,7 +63,7 @@ class PinConfirm extends Component {
         historyTrans.data.pageInfo,
       );
       this.props.updateProfile(profile.data.results);
-      this.setState({isLoading: false});
+      this.setState({isLoading: false, pin: ''});
       this.props.navigation.navigate('Result');
     } catch (err) {
       this.setState({messageRes: err.response.data.message});

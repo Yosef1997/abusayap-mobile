@@ -48,6 +48,11 @@ class Amount extends Component {
       note: this.state.note,
       date: Date(),
     });
+    this.setState({
+      amount: '',
+      amountNum: 0,
+      note: '',
+    });
     this.props.navigation.navigate('Confirmation');
   };
 
@@ -105,6 +110,7 @@ class Amount extends Component {
                       placeholderTextColor="#CBCBCB"
                       keyboardType="email-address"
                       style={styles.textInput}
+                      value={this.state.note}
                       onChangeText={e => this.setState({note: e})}
                     />
                   </View>
