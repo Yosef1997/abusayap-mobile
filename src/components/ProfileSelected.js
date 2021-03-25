@@ -1,15 +1,27 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import profile from '../assets/images/profile.jpg';
+import {REACT_APP_API_URL as API_URL} from '@env';
 
-const ProfileSelected = () => {
+const ProfileSelected = props => {
   return (
     <View style={style.card}>
       <View style={style.row}>
-        <Image source={profile} style={style.imageProfile} />
+        {props.picture === null ? (
+          <Image source={profile} style={style.imageProfile} />
+        ) : (
+          <Image
+            source={{uri: `${API_URL}/upload/profile/${props.picture}`}}
+            style={style.imageProfile}
+          />
+        )}
         <View>
-          <Text style={style.textName}>Michael Jordan</Text>
-          <Text style={style.textPhoneNumber}>+62 813-8492-9994</Text>
+          <Text style={style.textName}>{props.name}</Text>
+          <Text style={style.textPhoneNumber}>
+            {props.phoneNumber === null
+              ? props.email
+              : `+62 ${props.phoneNumber}`}
+          </Text>
         </View>
       </View>
     </View>

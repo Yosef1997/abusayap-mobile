@@ -15,10 +15,10 @@ import Icon from 'react-native-vector-icons/Feather';
 import {useDispatch, useSelector} from 'react-redux';
 import profile from '../assets/images/profile.jpg';
 import ListTransaction from '../components/ListTransaction';
-import LoadMore from '../components/LoadMore';
 import MainHeader from '../components/MainHeader';
 import http from '../helpers/http';
 import rupiah from '../helpers/rupiah';
+import {REACT_APP_API_URL as API_URL} from '@env';
 import {
   historyTransaction,
   newHistoryTransaction,
@@ -65,6 +65,8 @@ const Home = () => {
     }
   };
 
+  console.log(historyTransactionData, '<<<<<<<<<<<<<<<<<<< ini history');
+
   useEffect(() => {
     dispatch(historyTransaction(token));
   }, []);
@@ -78,7 +80,7 @@ const Home = () => {
             <Image source={profile} style={style.photoProfile} />
           ) : (
             <Image
-              source={{uri: profileInfo.picture}}
+              source={{uri: `${API_URL}/upload/profile/${profileInfo.picture}`}}
               style={style.photoProfile}
             />
           )}
@@ -115,27 +117,31 @@ const Home = () => {
         </View>
       </View>
       <View style={style.flatListWrapper}>
-        <FlatList
-          data={historyTransactionData}
-          keyExtractor={(item, index) => String(item.id)}
-          renderItem={({item}) => {
-            return (
-              <ListTransaction
-                id={item.id}
-                name={item.name}
-                amount={item.amount}
-                isTransfer={item.userAs}
-                picture={item.picture}
-                createdAt={item.createdAt}
-              />
-            );
-          }}
-          refreshing={listRefresh}
-          onRefresh={fetchNewData}
-          onEndReached={nextData}
-          onEndReachedThreshold={0.5}
-          // ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
-        />
+        {historyTransactionData === 'No transactions' ? (
+          <View />
+        ) : (
+          <FlatList
+            data={historyTransactionData}
+            keyExtractor={(item, index) => String(item.id)}
+            renderItem={({item}) => {
+              return (
+                <ListTransaction
+                  id={item.id}
+                  name={item.name}
+                  amount={item.amount}
+                  isTransfer={item.userAs}
+                  picture={item.picture}
+                  createdAt={item.createdAt}
+                />
+              );
+            }}
+            refreshing={listRefresh}
+            onRefresh={fetchNewData}
+            onEndReached={nextData}
+            onEndReachedThreshold={0.5}
+            // ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
+          />
+        )}
       </View>
     </>
   );

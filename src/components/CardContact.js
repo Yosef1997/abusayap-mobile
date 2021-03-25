@@ -9,15 +9,18 @@ import {useNavigation} from '@react-navigation/core';
 
 const ListTransaction = props => {
   const dispatch = useDispatch();
-  const nsvigation = useNavigation();
+  const navigation = useNavigation();
   const handlePress = () => {
     dispatch(
       contactFocus({
         id: props.id,
         name: props.name,
         picture: props.picture,
+        email: props.email,
+        phoneNumber: props.phoneNumber,
       }),
     );
+    navigation.navigate('Amount');
   };
   return (
     <TouchableOpacity style={style.card} onPress={() => handlePress()}>

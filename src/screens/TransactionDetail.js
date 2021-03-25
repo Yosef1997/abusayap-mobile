@@ -113,27 +113,31 @@ const TransactionDetail = () => {
         </View>
       </View>
       <View style={style.flatListWrapper}>
-        <FlatList
-          data={historyTransaction}
-          keyExtractor={(item, index) => String(index)}
-          renderItem={({item}) => {
-            return (
-              <ListTransaction
-                id={item.id}
-                name={item.name}
-                amount={item.amount}
-                isTransfer={item.userAs}
-                picture={item.picture}
-                createdAt={item.createdAt}
-              />
-            );
-          }}
-          refreshing={listRefresh}
-          onRefresh={fetchNewData}
-          onEndReached={nextData}
-          onEndReachedThreshold={1}
-          ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
-        />
+        {historyTransaction === 'No transactions' ? (
+          <View />
+        ) : (
+          <FlatList
+            data={historyTransaction}
+            keyExtractor={(item, index) => String(index)}
+            renderItem={({item}) => {
+              return (
+                <ListTransaction
+                  id={item.id}
+                  name={item.name}
+                  amount={item.amount}
+                  isTransfer={item.userAs}
+                  picture={item.picture}
+                  createdAt={item.createdAt}
+                />
+              );
+            }}
+            refreshing={listRefresh}
+            onRefresh={fetchNewData}
+            onEndReached={nextData}
+            onEndReachedThreshold={1}
+            ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
+          />
+        )}
       </View>
     </>
   );

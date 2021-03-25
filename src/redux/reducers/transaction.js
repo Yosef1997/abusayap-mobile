@@ -3,8 +3,11 @@ const initialState = {
   pageInfoTransaction: null,
   listContact: [],
   contactFocus: null,
+  transactionInfo: null,
+  statusSend: null,
   isLoading: false,
   messageResponse: null,
+  topUpMessage: null,
 };
 
 const transactionReducer = (state = initialState, action) => {
@@ -35,10 +38,41 @@ const transactionReducer = (state = initialState, action) => {
         listContact: action.payload,
       };
     case 'CONTACT_FOCUS':
-      console.log(action.payload, '<<<<<<<<<<<<<<<<ini kontak');
       return {
         ...state,
         contactFocus: action.payload,
+      };
+    case 'TOPUP_MESSAGE':
+      return {
+        ...state,
+        topUpMessage: action.payload,
+      };
+    case 'TOP_UP':
+      return {
+        ...state,
+        topUpMessage: action.payload,
+      };
+    case 'TRANSACTION_INFO':
+      return {
+        ...state,
+        transactionInfo: action.payload,
+      };
+    case 'SEND_AMOUNT':
+      return {
+        ...state,
+        statusSend: action.payload,
+      };
+    case 'CLEAN':
+      return {
+        history: [],
+        pageInfoTransaction: null,
+        listContact: [],
+        contactFocus: null,
+        transactionInfo: null,
+        statusSend: null,
+        isLoading: false,
+        messageResponse: null,
+        topUpMessage: null,
       };
     case 'IS_LOADING':
       return {

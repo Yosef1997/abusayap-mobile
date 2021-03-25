@@ -7,6 +7,7 @@ export const updateUser = (token, id, data) => {
       Object.keys(data).forEach(key => {
         form.append(key, data[key]);
       });
+      console.log(form);
       dispatch({
         type: 'SET_MESSAGE',
         payload: '',
@@ -18,6 +19,7 @@ export const updateUser = (token, id, data) => {
         message: results.data.message,
       });
     } catch (err) {
+      console.log(err);
       const {message} = err.response.data;
       dispatch({
         type: 'SET_MESSAGE',
