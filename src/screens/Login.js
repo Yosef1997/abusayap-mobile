@@ -125,7 +125,7 @@ class Login extends Component {
                     </Text>
                   )}
                   {(this.props.auth.authMessage ||
-                    this.props.auth.errMessage) && (
+                    this.props.auth.errorMessage) && (
                     <Text
                       style={[
                         styles.alert,
@@ -133,7 +133,7 @@ class Login extends Component {
                         styles[this.props.auth.alertType],
                       ]}>
                       {this.props.auth.authMessage ||
-                        this.props.auth.errMessage}
+                        this.props.auth.errorMessage}
                     </Text>
                   )}
                   {/* <Text>{JSON.stringify(this.props.auth)}</Text> */}
