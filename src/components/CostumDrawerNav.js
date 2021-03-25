@@ -13,7 +13,7 @@ const CostumDrawerNav = props => {
   const token = useSelector(state => state.auth.token);
   const dispatch = useDispatch();
   const handlePress = () => {
-    dispatch(signout());
+    dispatch(signout(token));
     props.navigation.dispatch(DrawerActions.closeDrawer());
   };
   return (
