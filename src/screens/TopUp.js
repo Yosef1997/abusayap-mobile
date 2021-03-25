@@ -20,6 +20,9 @@ class App extends Component {
   state = {
     modalVisible: false,
     amount: '',
+    message: null,
+    type: 'warning',
+    loading: false,
   };
   setModalVisible = visible => {
     this.setState({modalVisible: visible});
@@ -34,24 +37,78 @@ class App extends Component {
       },
       async response => {
         if (response.didCancel) {
-          // Alert('User cancelled upload image');
-          this.props.dispatch({
-            type: 'TOPUP_MESSAGE',
-            payload: 'User cancelled upload image',
+          this.setState({
+            message: 'User cancelled upload image',
+            type: 'warning',
           });
         } else if (response.errorMessage) {
-          // Alert('Image Error: ', response.errorMessage);
-          this.props.dispatch({
-            type: 'TOPUP_MESSAGE',
-            payload: `Image Error: ${response.errorMessage}`,
+          this.setState({
+            message: `Image Error: ${response.errorMessage}`,
+            type: 'warning',
           });
         } else if (response.fileSize >= 1 * 1024 * 1024) {
-          // Alert('Image to large');
-          this.props.dispatch({
-            type: 'TOPUP_MESSAGE',
-            payload: 'Image to large',
+          this.setState({
+            message: 'Image to large',
+            type: 'warning',
           });
         } else {
+          this.setState({
+            loading: true,
+            message: null,
+          });
+          try {
+            const dataImage = {
+              uri: response.uri,
+              type: response.type,
+              name: response.fileName,
+            };
+            await this.props.topUp(this.props.auth.token, {
+              amount: amount,
+              picture: dataImage,
+              dateTransaction: moment(dateTransaction).format(
+                'YYYY-MM-DD hh:mm:ss',
+              ),
+            });
+            this.setState({
+              loading: false,
+            });
+            this.setState({
+              message: 'Thanks for to up',
+              type: 'success',
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      },
+    );
+  };
+  addPhotoGallery = async () => {
+    this.setState({modalVisible: false});
+    const {amount} = this.state;
+    const dateTransaction = new Date();
+    launchImageLibrary({}, async response => {
+      if (response.didCancel) {
+        this.setState({
+          message: 'User cancelled upload image',
+          type: 'warning',
+        });
+      } else if (response.errorMessage) {
+        this.setState({
+          message: `Image Error: ${response.errorMessage}`,
+          type: 'warning',
+        });
+      } else if (response.fileSize >= 1 * 1024 * 1024) {
+        this.setState({
+          message: 'Image to large',
+          type: 'warning',
+        });
+      } else {
+        this.setState({
+          message: null,
+          loading: true,
+        });
+        try {
           const dataImage = {
             uri: response.uri,
             type: response.type,
@@ -64,56 +121,16 @@ class App extends Component {
               'YYYY-MM-DD hh:mm:ss',
             ),
           });
-          // Alert(this.props.transaction.topUpMessage, 'success');
-          this.props.dispatch({
-            type: 'TOP_UP',
+          this.setState({
+            loading: false,
           });
+          this.setState({
+            message: 'Thanks for to up',
+            type: 'success',
+          });
+        } catch (err) {
+          console.log(err);
         }
-      },
-    );
-  };
-  addPhotoGallery = async () => {
-    this.setState({modalVisible: false});
-    const {amount} = this.state;
-    const dateTransaction = new Date();
-    launchImageLibrary({}, async response => {
-      if (response.didCancel) {
-        // Alert('User cancelled upload image');
-        this.props.dispatch({
-          type: 'TOPUP_MESSAGE',
-          payload: 'User cancelled upload image',
-        });
-      } else if (response.errorMessage) {
-        // Alert('Image Error: ', response.errorMessage);
-        this.props.dispatch({
-          type: 'TOPUP_MESSAGE',
-          payload: `Image Error: ${response.errorMessage}`,
-        });
-      } else if (response.fileSize >= 1 * 1024 * 1024) {
-        // Alert('Image to large');
-        this.props.dispatch({
-          type: 'TOPUP_MESSAGE',
-          payload: 'Image to large',
-        });
-      } else {
-        const dataImage = {
-          uri: response.uri,
-          type: response.type,
-          name: response.fileName,
-        };
-        console.log(dataImage);
-        await this.props.topUp(this.props.auth.token, {
-          amount: amount,
-          picture: dataImage,
-          dateTransaction: moment(dateTransaction).format(
-            'YYYY-MM-DD hh:mm:ss',
-          ),
-        });
-        // Alert(this.props.transaction.topUpMessage, 'success');
-        this.props.dispatch({
-          type: 'TOPUP_MESSAGE',
-          payload: 'Image to large',
-        });
       }
     });
   };
@@ -139,6 +156,7 @@ class App extends Component {
                     <Text>Rp</Text>
                     <TextInput
                       placeholder="Input Top Up"
+                      keyboardType="number-pad"
                       onChangeText={amount => this.setState({amount})}
                     />
                   </View>
@@ -168,6 +186,14 @@ class App extends Component {
         </View>
         <ScrollView style={styles.container}>
           <View style={styles.contain}>
+            {this.state.loading && (
+              <Text style={styles.wait}>Please wait....</Text>
+            )}
+            {this.state.message && (
+              <Text style={[styles.alert, styles[this.state.type]]}>
+                {this.state.message}
+              </Text>
+            )}
             <Text style={styles.cardtitle}>How to Top-Up</Text>
             <View style={styles.card}>
               <Text style={styles.cardNumber}>1</Text>
@@ -353,6 +379,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     marginBottom: 20,
+  },
+  alert: {
+    fontSize: 15,
+    marginBottom: 25,
+  },
+  warning: {
+    color: '#FFC107',
+  },
+  success: {
+    color: '#0D6EFD',
+  },
+  wait: {
+    fontSize: 15,
+    color: '#7A7886',
+    marginBottom: 25,
   },
 });
 

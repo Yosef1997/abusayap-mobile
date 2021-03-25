@@ -26,17 +26,27 @@ export const signup = (username, email, password) => {
       });
     } catch (err) {
       console.log(err);
-      const {message} = err.response.data;
       dispatch({
         type: 'SET_LOADING',
       });
-      dispatch({
-        type: 'SET_MESSAGE',
-        payload: {
-          message,
-          type: 'warning',
-        },
-      });
+      if (err.response) {
+        const {message} = err.response.data;
+        dispatch({
+          type: 'SET_MESSAGE',
+          payload: {
+            message,
+            type: 'warning',
+          },
+        });
+      } else {
+        dispatch({
+          type: 'SET_MESSAGE',
+          payload: {
+            message: 'Server error',
+            type: 'warning',
+          },
+        });
+      }
     }
   };
 };
@@ -69,17 +79,19 @@ export const signin = (email, password, notificationToken) => {
       });
     } catch (err) {
       console.log(err);
-      const {message} = err.response.data;
       dispatch({
         type: 'SET_LOADING',
       });
-      dispatch({
-        type: 'SET_MESSAGE',
-        payload: {
-          message,
-          type: 'warning',
-        },
-      });
+      if (err.response) {
+        const {message} = err.response.data;
+        dispatch({
+          type: 'SET_MESSAGE',
+          payload: {
+            message,
+            type: 'warning',
+          },
+        });
+      }
     }
   };
 };

@@ -36,7 +36,10 @@ class Register extends Component {
     console.log(username, email, password);
     try {
       await this.props.signup(username, email, password);
-      if (this.props.auth.authMessage !== '') {
+      if (
+        this.props.auth.authMessage !== '' &&
+        this.props.auth.errorMessage === null
+      ) {
         this.props.navigation.navigate('CreatePin');
       }
     } catch (err) {
@@ -123,7 +126,7 @@ class Register extends Component {
                       this.handleInput('username', username)
                     }
                   />
-                  {this.state.messageUsername && (
+                  {this.state.username !== '' && this.state.messageUsername && (
                     <Text style={[styles.alert, styles[this.state.type]]}>
                       {this.state.messageUsername}
                     </Text>
@@ -134,7 +137,7 @@ class Register extends Component {
                     placeholder="Enter your email"
                     onChangeText={email => this.handleInput('email', email)}
                   />
-                  {this.state.messageEmail && (
+                  {this.state.email !== '' && this.state.messageEmail && (
                     <Text style={[styles.alert, styles[this.state.type]]}>
                       {this.state.messageEmail}
                     </Text>
@@ -147,7 +150,7 @@ class Register extends Component {
                       this.handleInput('password', password)
                     }
                   />
-                  {this.state.messagePassword && (
+                  {this.state.password !== '' && this.state.messagePassword && (
                     <Text style={[styles.alert, styles[this.state.type]]}>
                       {this.state.messagePassword}
                     </Text>
