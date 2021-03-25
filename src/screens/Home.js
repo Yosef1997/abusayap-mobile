@@ -65,6 +65,8 @@ const Home = () => {
     }
   };
 
+  console.log(historyTransactionData, '<<<<<<<<<<<<<<<<<<< ini history');
+
   useEffect(() => {
     dispatch(historyTransaction(token));
   }, []);
@@ -115,27 +117,35 @@ const Home = () => {
         </View>
       </View>
       <View style={style.flatListWrapper}>
-        <FlatList
-          data={historyTransactionData}
-          keyExtractor={(item, index) => String(item.id)}
-          renderItem={({item}) => {
-            return (
-              <ListTransaction
-                id={item.id}
-                name={item.name}
-                amount={item.amount}
-                isTransfer={item.userAs}
-                picture={item.picture}
-                createdAt={item.createdAt}
-              />
-            );
-          }}
-          refreshing={listRefresh}
-          onRefresh={fetchNewData}
-          onEndReached={nextData}
-          onEndReachedThreshold={0.5}
-          // ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
-        />
+        {historyTransactionData === 'No transactions' ? (
+          <>
+            <View style={style.rowTextDontHaveTrans}>
+              <Text style={style.textBold}>You don't have a transaction</Text>
+            </View>
+          </>
+        ) : (
+          <FlatList
+            data={historyTransactionData}
+            keyExtractor={(item, index) => String(item.id)}
+            renderItem={({item}) => {
+              return (
+                <ListTransaction
+                  id={item.id}
+                  name={item.name}
+                  amount={item.amount}
+                  isTransfer={item.userAs}
+                  picture={item.picture}
+                  createdAt={item.createdAt}
+                />
+              );
+            }}
+            refreshing={listRefresh}
+            onRefresh={fetchNewData}
+            onEndReached={nextData}
+            onEndReachedThreshold={0.5}
+            // ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
+          />
+        )}
       </View>
     </>
   );
@@ -165,6 +175,17 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 40,
+  },
+  rowTextDontHaveTrans: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textBold: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'red',
   },
   rowBalance: {
     flex: 1,

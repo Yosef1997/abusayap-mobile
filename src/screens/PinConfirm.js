@@ -10,11 +10,7 @@ import {
 import PinField from '../components/PinField';
 import Button from '../components/Button';
 import {connect} from 'react-redux';
-import {
-  sendAmount,
-  newHistoryTransaction,
-  // historyTransaction,
-} from '../redux/actions/transaction';
+import {sendAmount, newHistoryTransaction} from '../redux/actions/transaction';
 import moment from 'moment';
 import {updateProfile} from '../redux/actions/auth';
 import http from '../helpers/http';
@@ -50,7 +46,9 @@ class PinConfirm extends Component {
       form.append('status', 'transfer');
       form.append(
         'dateTransaction',
-        moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
+        moment(this.props.transaction.transactionInfo.date).format(
+          'YYYY-MM-DD hh:mm:ss',
+        ),
       );
       form.append('pin', this.state.pin);
       await http(this.props.profile.token).post('/transaction', form);
@@ -60,10 +58,12 @@ class PinConfirm extends Component {
       const historyTrans = await http(this.props.profile.token).get(
         '/transaction/history?search=&page=1&limit=4&offset=0&sort=createdAt&order=DESC',
       );
-      this.props.newHistoryTransaction(historyTrans.data.results);
+      this.props.newHistoryTransaction(
+        historyTrans.data.results,
+        historyTrans.data.pageInfo,
+      );
       this.props.updateProfile(profile.data.results);
       this.setState({isLoading: false});
-
       this.props.navigation.navigate('Result');
     } catch (err) {
       this.setState({messageRes: err.response.data.message});

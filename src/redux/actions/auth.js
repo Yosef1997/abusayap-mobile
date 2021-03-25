@@ -82,9 +82,16 @@ export const signin = (email, password) => {
   };
 };
 
-export const signout = () => ({
-  type: 'SIGNOUT',
-});
+export const signout = () => {
+  return async dispatch => {
+    dispatch({
+      type: 'SIGNOUT',
+    });
+    dispatch({
+      type: 'CLEAN',
+    });
+  };
+};
 export const updateProfile = data => ({
   type: 'UPDATE_PROFILE',
   payload: data,

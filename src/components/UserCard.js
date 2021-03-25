@@ -32,10 +32,9 @@ export default function UserCard(props) {
             <View style={styles.lastCol}>
               <Text style={styles.title}>{transactionFocus.name}</Text>
               <Text style={styles.subtitle}>
-                +62{' '}
                 {transactionFocus.phoneNumber === null
                   ? transactionFocus.email
-                  : transactionFocus.phoneNumber}
+                  : `+62 ${transactionFocus.phoneNumber}`}
               </Text>
             </View>
           </View>
