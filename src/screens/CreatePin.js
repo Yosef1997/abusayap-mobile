@@ -16,6 +16,7 @@ import CardAuth from '../components/CardAuth';
 import Container from '../components/Container';
 import PinField from '../components/PinField';
 import Button from '../components/Button';
+import {Formik} from 'formik';
 
 import http from '../helpers/http';
 

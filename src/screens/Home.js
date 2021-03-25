@@ -66,12 +66,8 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    dispatch(historyTransaction(token));
   }, []);
-
-  const fetchData = async () => {
-    await historyTransaction(token);
-  };
 
   return (
     <>

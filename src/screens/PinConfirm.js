@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 import {
   sendAmount,
   newHistoryTransaction,
-  historyTransaction,
+  // historyTransaction,
 } from '../redux/actions/transaction';
 import {updateProfile} from '../redux/actions/auth';
 import http from '../helpers/http';
