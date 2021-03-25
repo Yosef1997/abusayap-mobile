@@ -9,26 +9,46 @@ import {
 import Search from '../components/CustomInput';
 import ListContact from '../components/CardContact';
 import {connect} from 'react-redux';
+import {newDataContactFlatList} from '../redux/actions/transaction';
+import http from '../helpers/http';
+import LoadMore from '../components/LoadMore';
 
 class SearchReceiver extends Component {
-  // state = {
-  //   listRefresh: false,
-  // }
+  state = {
+    listRefresh: false,
+  };
 
-  // fetchNewData = async () => {
-  //     try {
-  //       this.setState({listRefresh: true})
-  //       const oldData = historyTransaction;
-  //       const response = await http(token).get(`${nextPage.nextLink}`);
-  //       const resultResponse = response.data.results;
-  //       dispatch(pageInfoHistoryTransaction(response.data.pageInfo));
-  //       const newData = [...oldData, ...resultResponse];
-  //       dispatch(newHistoryTransaction(newData));
-  //       setListRefresh(false);
-  //     } catch (err) {
-  //       console.log(err.response.data.message);
-  //     }
-  // }
+  fetchNewData = async () => {
+    try {
+      this.setState({listRefresh: true});
+      const oldData = this.props.contact.listContact;
+      const response = await http(this.props.auth.token).get(
+        `${this.props.contact.pageInfoContact.nextLink}`,
+      );
+      const resultResponse = response.data.results;
+      const newData = [...oldData, ...resultResponse];
+      this.props.newDataContactFlatList(newData, response.data.pageInfo);
+      this.setState({listRefresh: false});
+    } catch (err) {
+      console.log(err.response.data.message);
+      this.setState({listRefresh: false});
+    }
+  };
+
+  nextData = async () => {
+    try {
+      const oldData = this.props.contact.listContact;
+      const response = await http(this.props.auth.token).get(
+        `${this.props.contact.pageInfoContact.nextLink}`,
+      );
+      const resultResponse = response.data.results;
+      const newData = [...oldData, ...resultResponse];
+      this.props.newDataContactFlatList(newData, response.data.pageInfo);
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
   render() {
     return (
       <>
@@ -62,11 +82,15 @@ class SearchReceiver extends Component {
                   />
                 );
               }}
-              // refreshing={listRefresh}
-              // onRefresh={fetchNewData}
-              // onEndReached={nextData}
-              // onEndReachedThreshold={1}
-              // ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
+              refreshing={this.state.listRefresh}
+              onRefresh={this.fetchNewData}
+              onEndReached={this.nextData}
+              onEndReachedThreshold={1}
+              ListFooterComponent={
+                <LoadMore
+                  nextLink={this.props.contact.pageInfoContact.nextLink}
+                />
+              }
             />
           )}
         </View>
@@ -103,6 +127,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   contact: state.transaction,
+  auth: state.auth,
 });
-
-export default connect(mapStateToProps)(SearchReceiver);
+const mapDispatchToProps = {newDataContactFlatList};
+export default connect(mapStateToProps, mapDispatchToProps)(SearchReceiver);

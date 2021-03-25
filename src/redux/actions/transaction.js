@@ -29,15 +29,32 @@ export const getContact = (token, search, sort) => {
       payload: true,
     });
     const response = await http(token).get(
-      `/contact?search=${search}&sort=name&order=${sort}`,
+      `/contact?search=${search}&sort=name&order=${sort}&limit=8`,
     );
     dispatch({
       type: 'LIST_CONTACT',
       payload: response.data.results,
     });
     dispatch({
+      type: 'PAGE_INFO_LIST_CONTACT',
+      payload: response.data.pageInfo,
+    });
+    dispatch({
       type: 'IS_LOADING',
       payload: false,
+    });
+  };
+};
+
+export const newDataContactFlatList = (contact, pageInfo) => {
+  return async dispatch => {
+    dispatch({
+      type: 'LIST_CONTACT',
+      payload: contact,
+    });
+    dispatch({
+      type: 'PAGE_INFO_LIST_CONTACT',
+      payload: pageInfo,
     });
   };
 };
