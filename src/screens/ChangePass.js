@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import Button from '../components/ButtonProfile';
+import Button from '../components/Button';
 import PasswordField from '../components/PasswordField';
 import {Formik} from 'formik';
 import {connect} from 'react-redux';
@@ -84,14 +84,7 @@ class ChangePass extends Component {
               resetForm();
             }, 500);
           }}>
-          {({
-            values,
-            errors,
-            // touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-          }) => (
+          {({values, errors, handleChange, handleBlur, handleSubmit}) => (
             <>
               <View style={styles.control}>
                 <PasswordField
@@ -100,9 +93,6 @@ class ChangePass extends Component {
                   onChangeText={handleChange('password')}
                   onBlur={handleBlur('password')}
                 />
-                {/* {touched.password && errors.msg ? (
-                  <Text style={styles.textError}>{errors.msg}</Text>
-                ) : null} */}
               </View>
               <View style={styles.control}>
                 <PasswordField
@@ -111,9 +101,6 @@ class ChangePass extends Component {
                   onChangeText={handleChange('newPassword')}
                   onBlur={handleBlur('newPassword')}
                 />
-                {/* {errors.newPassword && touched.newPassword ? (
-                  <Text style={styles.textError}>{errors.msg}</Text>
-                ) : null} */}
               </View>
               <View style={styles.control}>
                 <PasswordField
@@ -122,9 +109,6 @@ class ChangePass extends Component {
                   onChangeText={handleChange('validNewPassword')}
                   onBlur={handleBlur('validNewPassword')}
                 />
-                {/* {touched.password &&
-                touched.newPassword &&
-                touched.validNewPassword && */}
                 {errors.msg ? (
                   <Text style={styles.textError}>{errors.msg}</Text>
                 ) : null}
@@ -133,9 +117,9 @@ class ChangePass extends Component {
                     {this.props.auth.authMessage}
                   </Text>
                 ) : null}
-                {this.props.auth.errorMsg && this.state.isMessage ? (
+                {this.props.auth.errorMessage && this.state.isMessage ? (
                   <Text style={styles.textError}>
-                    {this.props.auth.errorMsg}
+                    {this.props.auth.errorMessage}
                   </Text>
                 ) : null}
                 {this.state.isLoading ? (
@@ -144,7 +128,14 @@ class ChangePass extends Component {
                   </View>
                 ) : null}
               </View>
-              <Button label="Change Password" onPress={handleSubmit} />
+              <View style={styles.button}>
+                <Button
+                  label="Change Password"
+                  onPress={handleSubmit}
+                  disabled={errors.msg}>
+                  Change Password
+                </Button>
+              </View>
             </>
           )}
         </Formik>
@@ -197,6 +188,9 @@ const styles = StyleSheet.create({
     color: '#00D16C',
     textAlign: 'center',
     marginVertical: 10,
+  },
+  button: {
+    marginHorizontal: 10,
   },
 });
 const mapStateToProps = state => ({

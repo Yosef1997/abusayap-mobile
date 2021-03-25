@@ -8,7 +8,7 @@ import {
   StyleSheet,
   StatusBar,
   Dimensions,
-  Pressable,
+  TouchableOpacity,
 } from 'react-native';
 
 // import assets
@@ -19,23 +19,19 @@ import Container from '../components/Container';
 
 export default function HeaderGreen(props) {
   const navigation = useNavigation();
+  const goBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <Fragment>
       <StatusBar backgroundColor="#00D16C" />
       <View style={styles.header(props.height)}>
         <Container width={90}>
-          <View style={styles.head}>
-            <Pressable
-              android_ripple={{
-                radius: 20,
-                color: 'black',
-                borderless: true,
-              }}
-              onPress={() => navigation.goBack()}>
-              <Icon name="arrow-back-outline" size={25} color="#FFFFFF" />
-            </Pressable>
+          <TouchableOpacity style={styles.head} onPress={goBack}>
+            <Icon name="arrow-back-outline" size={25} color="#FFFFFF" />
             <Text style={styles.text}>{props.text}</Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.userCard}>{props.children}</View>
         </Container>
       </View>

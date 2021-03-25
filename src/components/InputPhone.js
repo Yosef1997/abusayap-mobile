@@ -12,6 +12,7 @@ export default class InputPhone extends Component {
           keyboardType="number-pad"
           placeholder="Enter your phone number"
           onChangeText={this.props.onChangeText}
+          value={this.props.value}
           style={styles.input}
         />
       </View>
