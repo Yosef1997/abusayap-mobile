@@ -5,6 +5,7 @@ import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
 import authReducer from './auth';
 import transactionReducer from './transaction';
 import profileReducer from './UpdateProfile';
+import notificationReducer from './notification';
 
 const authConfig = {
   key: 'auth',
@@ -16,6 +17,7 @@ const reducer = combineReducers({
   auth: persistReducer(authConfig, authReducer),
   transaction: transactionReducer,
   profile: profileReducer,
+  notification: notificationReducer,
 });
 
 export default reducer;

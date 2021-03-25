@@ -6,9 +6,20 @@ import {
   newHistoryTransaction,
   historyTransaction,
 } from './redux/actions/transaction';
+import PushNotification from 'react-native-push-notification';
+import {setNotificationToken} from './redux/actions/notification';
 
 class Root extends React.Component {
   componentDidMount() {
+    PushNotification.configure({
+      onRegister: token => {
+        this.props.setNotificationToken(token.token);
+      },
+      onNotification: notification => {
+        console.log('NOTIF ======== :', notification);
+      },
+    });
+
     io.onAny(() => {
       if (this.props.auth.token) {
         const {
@@ -39,6 +50,7 @@ const mapDispatchToProps = {
   getUserDetail,
   historyTransaction,
   newHistoryTransaction,
+  setNotificationToken,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Root);
