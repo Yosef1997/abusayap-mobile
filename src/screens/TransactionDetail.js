@@ -1,18 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/core';
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
 import ListTransaction from '../components/ListTransaction';
-import LoadMore from '../components/LoadMore';
 import MainHeader from '../components/MainHeader';
 import http from '../helpers/http';
 import rupiah from '../helpers/rupiah';
@@ -100,33 +92,51 @@ const TransactionDetail = () => {
           </View>
         </View>
       </MainHeader>
-      <View style={style.mainBodyWrapper}>
-        <Text style={style.title}>In This Week</Text>
-        <View>
-          <Chart />
-        </View>
-        <View style={style.rowTitle}>
-          <Text style={style.title}>Transaction History</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('History')}>
-            <Text style={style.textSeeAll}>See All</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+
       <View style={style.flatListWrapper}>
         <FlatList
+          ListHeaderComponent={() => {
+            return (
+              <View style={style.mainBodyWrapper}>
+                <Text style={style.title}>In This Week</Text>
+                <View>
+                  <Chart />
+                </View>
+                <View style={style.rowTitle}>
+                  <Text style={style.title}>Transaction History</Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('History')}>
+                    <Text style={style.textSeeAll}>See All</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          }}
           data={historyTransaction}
           keyExtractor={(item, index) => String(index)}
           renderItem={({item}) => {
-            return (
-              <ListTransaction
-                id={item.id}
-                name={item.name}
-                amount={item.amount}
-                isTransfer={item.userAs}
-                picture={item.picture}
-                createdAt={item.createdAt}
-              />
-            );
+            if (historyTransaction === 'No transactions') {
+              return (
+                <>
+                  <View style={style.rowTextDontHaveTrans}>
+                    <Text style={style.textBold}>
+                      You don't have a transaction
+                    </Text>
+                  </View>
+                </>
+              );
+            } else {
+              return (
+                <ListTransaction
+                  id={item.id}
+                  name={item.name}
+                  amount={item.amount}
+                  isTransfer={item.userAs}
+                  picture={item.picture}
+                  createdAt={item.createdAt}
+                />
+              );
+            }
           }}
           refreshing={listRefresh}
           onRefresh={fetchNewData}
@@ -148,6 +158,17 @@ const style = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     marginLeft: 22,
+  },
+  rowTextDontHaveTrans: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textBold: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'red',
   },
   rowHeader: {
     height: 50,

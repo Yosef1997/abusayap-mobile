@@ -51,8 +51,8 @@ const Home = () => {
   };
 
   const nextData = async () => {
+    const oldData = historyTransactionData;
     try {
-      const oldData = historyTransactionData;
       const response = await http(token).get(`${nextPage.nextLink}`);
       const resultResponse = response.data.results;
       dispatch(pageInfoHistoryTransaction(response.data.pageInfo));
