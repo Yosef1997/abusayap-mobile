@@ -115,16 +115,28 @@ const TransactionDetail = () => {
           data={historyTransaction}
           keyExtractor={(item, index) => String(index)}
           renderItem={({item}) => {
-            return (
-              <ListTransaction
-                id={item.id}
-                name={item.name}
-                amount={item.amount}
-                isTransfer={item.userAs}
-                picture={item.picture}
-                createdAt={item.createdAt}
-              />
-            );
+            if (historyTransaction === 'No transactions') {
+              return (
+                <>
+                  <View style={style.rowTextDontHaveTrans}>
+                    <Text style={style.textBold}>
+                      You don't have a transaction
+                    </Text>
+                  </View>
+                </>
+              );
+            } else {
+              return (
+                <ListTransaction
+                  id={item.id}
+                  name={item.name}
+                  amount={item.amount}
+                  isTransfer={item.userAs}
+                  picture={item.picture}
+                  createdAt={item.createdAt}
+                />
+              );
+            }
           }}
           refreshing={listRefresh}
           onRefresh={fetchNewData}
@@ -146,6 +158,17 @@ const style = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     marginLeft: 22,
+  },
+  rowTextDontHaveTrans: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textBold: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'red',
   },
   rowHeader: {
     height: 50,

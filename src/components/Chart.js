@@ -24,7 +24,6 @@ class Chart extends Component {
           income: item.asReceiver,
         })),
       });
-      console.log(this.state.day);
     } catch (err) {
       console.log(err);
     }
