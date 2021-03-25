@@ -118,7 +118,11 @@ const Home = () => {
       </View>
       <View style={style.flatListWrapper}>
         {historyTransactionData === 'No transactions' ? (
-          <View />
+          <>
+            <View style={style.rowTextDontHaveTrans}>
+              <Text style={style.textBold}>You don't have a transaction</Text>
+            </View>
+          </>
         ) : (
           <FlatList
             data={historyTransactionData}
@@ -171,6 +175,17 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 40,
+  },
+  rowTextDontHaveTrans: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textBold: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'red',
   },
   rowBalance: {
     flex: 1,
