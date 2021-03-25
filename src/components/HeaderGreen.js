@@ -1,7 +1,15 @@
 // ===== Header Green
 // import all modules
 import React, {Fragment} from 'react';
-import {View, Text, StyleSheet, StatusBar, Dimensions} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  StatusBar,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 
 // import assets
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -10,15 +18,20 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Container from '../components/Container';
 
 export default function HeaderGreen(props) {
+  const navigation = useNavigation();
+  const goBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <Fragment>
       <StatusBar backgroundColor="#00D16C" />
       <View style={styles.header(props.height)}>
         <Container width={90}>
-          <View style={styles.head}>
+          <TouchableOpacity style={styles.head} onPress={goBack}>
             <Icon name="arrow-back-outline" size={25} color="#FFFFFF" />
             <Text style={styles.text}>{props.text}</Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.userCard}>{props.children}</View>
         </Container>
       </View>
