@@ -81,7 +81,7 @@ class Login extends Component {
   doLogin = async () => {
     const {email, password} = this.state;
     console.log(email, password);
-    await this.props.signin(email, password);
+    await this.props.signin(email, password, this.props.notification.token);
     if (this.props.auth.token) {
       this.props.navigation.navigate('Home');
     }
@@ -229,6 +229,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   auth: state.auth,
+  notification: state.notification,
 });
 const mapDispatchToProps = {signin};
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

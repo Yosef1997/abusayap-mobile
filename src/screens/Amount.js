@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
   },
   inputAmount: {
     fontSize: 35,
+    color: 'black',
   },
   input: {
     borderBottomColor: '#E8E9EC',
@@ -204,6 +205,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     height: 50,
+    color: 'black',
   },
   btnSubmit: {
     height: 50,

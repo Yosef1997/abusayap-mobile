@@ -51,7 +51,7 @@ export const signup = (username, email, password) => {
   };
 };
 
-export const signin = (email, password) => {
+export const signin = (email, password, notificationToken) => {
   return async dispatch => {
     dispatch({
       type: 'SET_LOADING',
@@ -59,6 +59,8 @@ export const signin = (email, password) => {
     const params = new URLSearchParams();
     params.append('email', email);
     params.append('password', password);
+    params.append('token', notificationToken);
+
     try {
       const results = await http().post('/auth/login', params);
       const token = results.data.results.token;
@@ -94,14 +96,19 @@ export const signin = (email, password) => {
   };
 };
 
-export const signout = () => {
+export const signout = token => {
   return async dispatch => {
-    dispatch({
-      type: 'SIGNOUT',
-    });
-    dispatch({
-      type: 'CLEAN',
-    });
+    try {
+      await http(token).post('/auth/logout');
+      dispatch({
+        type: 'SIGNOUT',
+      });
+      dispatch({
+        type: 'CLEAN',
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 };
 export const updateProfile = data => ({

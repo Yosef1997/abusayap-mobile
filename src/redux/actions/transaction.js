@@ -117,7 +117,10 @@ export const sendAmount = (token, receiver, data, pin) => {
     form.append('amount', data.amount);
     form.append('notes', data.note);
     form.append('status', 'transfer');
-    form.append('dateTransaction', new Date());
+    form.append(
+      'dateTransaction',
+      moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
+    );
     form.append('pin', pin);
     const response = http(token).post('/transaction', form);
     dispatch({
