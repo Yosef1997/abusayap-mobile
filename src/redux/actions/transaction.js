@@ -51,11 +51,15 @@ export const pageInfoHistoryTransaction = data => {
   };
 };
 
-export const newHistoryTransaction = data => {
+export const newHistoryTransaction = (data, pageInfo) => {
   return async dispatch => {
     dispatch({
       type: 'HISTORY_TRANSACTION',
       payload: data,
+    });
+    dispatch({
+      type: 'NEW_DATA_PAGE_INFO_TRANSACTION',
+      payload: pageInfo,
     });
   };
 };

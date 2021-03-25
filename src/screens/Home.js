@@ -65,13 +65,11 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  console.log(historyTransactionData, '<<<<<<<<<<<<<<<<<<< ini history');
 
-  const fetchData = async () => {
-    await historyTransaction(token);
-  };
+  useEffect(() => {
+    dispatch(historyTransaction(token));
+  }, []);
 
   return (
     <>
@@ -119,27 +117,31 @@ const Home = () => {
         </View>
       </View>
       <View style={style.flatListWrapper}>
-        <FlatList
-          data={historyTransactionData}
-          keyExtractor={(item, index) => String(item.id)}
-          renderItem={({item}) => {
-            return (
-              <ListTransaction
-                id={item.id}
-                name={item.name}
-                amount={item.amount}
-                isTransfer={item.userAs}
-                picture={item.picture}
-                createdAt={item.createdAt}
-              />
-            );
-          }}
-          refreshing={listRefresh}
-          onRefresh={fetchNewData}
-          onEndReached={nextData}
-          onEndReachedThreshold={0.5}
-          // ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
-        />
+        {historyTransactionData === 'No transactions' ? (
+          <View />
+        ) : (
+          <FlatList
+            data={historyTransactionData}
+            keyExtractor={(item, index) => String(item.id)}
+            renderItem={({item}) => {
+              return (
+                <ListTransaction
+                  id={item.id}
+                  name={item.name}
+                  amount={item.amount}
+                  isTransfer={item.userAs}
+                  picture={item.picture}
+                  createdAt={item.createdAt}
+                />
+              );
+            }}
+            refreshing={listRefresh}
+            onRefresh={fetchNewData}
+            onEndReached={nextData}
+            onEndReachedThreshold={0.5}
+            // ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
+          />
+        )}
       </View>
     </>
   );

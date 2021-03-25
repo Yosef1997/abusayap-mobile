@@ -62,6 +62,18 @@ const transactionReducer = (state = initialState, action) => {
         ...state,
         statusSend: action.payload,
       };
+    case 'CLEAN':
+      return {
+        history: [],
+        pageInfoTransaction: null,
+        listContact: [],
+        contactFocus: null,
+        transactionInfo: null,
+        statusSend: null,
+        isLoading: false,
+        messageResponse: null,
+        topUpMessage: null,
+      };
     case 'IS_LOADING':
       return {
         ...state,
