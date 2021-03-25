@@ -59,11 +59,10 @@ class PinConfirm extends Component {
       this.props.newHistoryTransaction(historyTrans.data.results);
       this.props.updateProfile(profile.data.results);
       this.setState({isLoading: false});
-
       this.props.navigation.navigate('Result');
     } catch (err) {
       this.setState({messageRes: err.response.data.message});
-      this.setState({isLoading: true});
+      this.setState({isLoading: false});
     }
   };
 
