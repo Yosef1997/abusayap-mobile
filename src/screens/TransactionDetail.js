@@ -94,38 +94,34 @@ const TransactionDetail = () => {
       </MainHeader>
 
       <View style={style.flatListWrapper}>
-        <FlatList
-          ListHeaderComponent={() => {
-            return (
-              <View style={style.mainBodyWrapper}>
-                <Text style={style.title}>In This Week</Text>
-                <View>
-                  <Chart />
-                </View>
-                <View style={style.rowTitle}>
-                  <Text style={style.title}>Transaction History</Text>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate('History')}>
-                    <Text style={style.textSeeAll}>See All</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            );
-          }}
-          data={historyTransaction}
-          keyExtractor={(item, index) => String(index)}
-          renderItem={({item}) => {
-            if (historyTransaction === 'No transactions') {
+        {historyTransaction === 'No transactions' ? (
+          <>
+            <View style={style.rowTextDontHaveTrans}>
+              <Text style={style.textBold}>You don't have a transaction</Text>
+            </View>
+          </>
+        ) : (
+          <FlatList
+            ListHeaderComponent={() => {
               return (
-                <>
-                  <View style={style.rowTextDontHaveTrans}>
-                    <Text style={style.textBold}>
-                      You don't have a transaction
-                    </Text>
+                <View style={style.mainBodyWrapper}>
+                  <Text style={style.title}>In This Week</Text>
+                  <View>
+                    <Chart />
                   </View>
-                </>
+                  <View style={style.rowTitle}>
+                    <Text style={style.title}>Transaction History</Text>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('History')}>
+                      <Text style={style.textSeeAll}>See All</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
               );
-            } else {
+            }}
+            data={historyTransaction}
+            keyExtractor={(item, index) => String(item.id)}
+            renderItem={({item}) => {
               return (
                 <ListTransaction
                   id={item.id}
@@ -136,13 +132,14 @@ const TransactionDetail = () => {
                   createdAt={item.createdAt}
                 />
               );
-            }
-          }}
-          refreshing={listRefresh}
-          onRefresh={fetchNewData}
-          onEndReached={nextData}
-          onEndReachedThreshold={1}
-        />
+            }}
+            refreshing={listRefresh}
+            onRefresh={fetchNewData}
+            onEndReached={nextData}
+            onEndReachedThreshold={0.5}
+            // ListFooterComponent={<LoadMore nextLink={nextPage.nextLink} />}
+          />
+        )}
       </View>
     </>
   );
