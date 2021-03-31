@@ -13,7 +13,7 @@ class Chart extends Component {
     this.fetchData();
   }
 
-  async fetchData ()  {
+  async fetchData() {
     try {
       const {token} = this.props.auth;
       const response = await http(token).get('chart');
@@ -27,7 +27,7 @@ class Chart extends Component {
     } catch (err) {
       console.log(err);
     }
-  };
+  }
   render() {
     const labels = this.state.day;
     const data = this.state.amount;
