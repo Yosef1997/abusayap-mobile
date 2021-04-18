@@ -1,41 +1,71 @@
-// import React, {Component} from 'react';
-// import {Text, View} from 'react-native';
-// import {StackedBarChart} from 'react-native-chart-kit';
-// import {Dimensions} from 'react-native';
-// const screenWidth = Dimensions.get('window').width;
+import React, {Component} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import {StackedBarChart} from 'react-native-svg-charts';
+import http from '../helpers/http';
+import {connect} from 'react-redux';
 
-// const chartConfig = {
-//   backgroundGradientFrom: '#fafcff',
-//   backgroundGradientTo: '#fafcff',
-//   color: (opacity = 1) => `rgba(143, 143, 143, ${opacity})`,
-//   strokeWidth: 5, // optional, default 3
-//   useShadowColorFromDataset: false, // optional
-// };
-// const data = {
-//   labels: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-//   data: [
-//     [60, 60, 60],
-//     [30, 30, 60],
-//     [30, 30, 60],
-//     [30, 30, 60],
-//     [30, 30, 60],
-//     [30, 30, 60],
-//   ],
-//   barColors: ['red', 'yellow', '#a4b0be'],
-// };
+class Chart extends Component {
+  state = {
+    day: [],
+    amount: [],
+  };
+  componentDidMount() {
+    this.fetchData();
+  }
 
-// export default class Chart extends Component {
-//   render() {
-//     return (
-//       <StackedBarChart
-//         // style={graphStyle}
-//         data={data}
-//         width={screenWidth}
-//         height={220}
-//         chartConfig={chartConfig}
-//         withHorizontalLabels={false}
-//         showLegend={false}
-//       />
-//     );
-//   }
-// }
+  async fetchData() {
+    try {
+      const {token} = this.props.auth;
+      const response = await http(token).get('chart');
+      await this.setState({
+        day: response.data.results.map(item => item.day),
+        amount: response.data.results.map(item => ({
+          expense: item.asSender,
+          income: item.asReceiver,
+        })),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  render() {
+    const labels = this.state.day;
+    const data = this.state.amount;
+    const colors = ['#9DA6B5', '#00D16C'];
+    const keys = ['expense', 'income'];
+    return (
+      <>
+        <StackedBarChart
+          style={{height: 250}}
+          keys={keys}
+          colors={colors}
+          data={data}
+          showGrid={false}
+          contentInset={{top: 30, bottom: 10}}
+        />
+        <View style={styles.wrapper}>
+          {labels.map((item, index) => {
+            return <Text style={styles.label}>{item}</Text>;
+          })}
+        </View>
+      </>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 50,
+  },
+  label: {
+    marginLeft: -5,
+  },
+});
+
+const mapStateToProps = props => ({
+  auth: props.auth,
+});
+
+export default connect(mapStateToProps)(Chart);

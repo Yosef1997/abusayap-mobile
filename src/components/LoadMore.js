@@ -9,7 +9,7 @@ const LoadMore = props => {
           <ActivityIndicator size="large" color="black" />
         </View>
       ) : (
-        <View />
+        <View style={style.row} />
       )}
     </>
   );
@@ -22,6 +22,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 10,
     marginTop: 10,
+    marginBottom: 250,
   },
 });
 

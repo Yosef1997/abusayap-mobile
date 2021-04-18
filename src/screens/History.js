@@ -9,6 +9,7 @@ import {
   StyleSheet,
   FlatList,
   Modal,
+  ActivityIndicator,
 } from 'react-native';
 import DatePicker from 'react-native-modern-datepicker';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -25,6 +26,7 @@ const History = () => {
   const [dateFirstVal, setDateFirstVal] = useState('');
   const [dateSecondVal, setDateSecondVal] = useState('');
   const [listRefresh, setListRefresh] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [filterBy, setFilterBy] = useState(null);
   const [sort, setSort] = useState('DESC');
   const [switcherSort, setSwitcherSort] = useState(false);
@@ -99,11 +101,13 @@ const History = () => {
   };
 
   const getDataByCondition = async () => {
+    setIsLoading(true);
     const response = await http(token).get(
       `/transaction/history?search=&page=1&limit=6&offset=0&sort=createdAt&order=${sort}&filter=${filterBy}&dateMin=${dateFirstVal}&dateMax=${dateSecondVal}`,
     );
     setHistoryTransaction(response.data.results);
     setNextPage(response.data.pageInfo);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -165,26 +169,32 @@ const History = () => {
       </Modal>
       <View style={{flex: 1}}>
         <View style={style.flatListWrapper}>
-          <FlatList
-            data={historyTransaction}
-            keyExtractor={(item, index) => String(item.id)}
-            renderItem={({item}) => {
-              return (
-                <ListTransaction
-                  id={item.id}
-                  name={item.name}
-                  amount={item.amount}
-                  isTransfer={item.userAs}
-                  picture={item.picture}
-                  createdAt={item.createdAt}
-                />
-              );
-            }}
-            refreshing={listRefresh}
-            onRefresh={fetchNewData}
-            onEndReached={nextData}
-            onEndReachedThreshold={1}
-          />
+          {isLoading === true ? (
+            <View style={style.indicatorWrapper}>
+              <ActivityIndicator size="large" color="black" />
+            </View>
+          ) : (
+            <FlatList
+              data={historyTransaction}
+              keyExtractor={(item, index) => String(item.id)}
+              renderItem={({item}) => {
+                return (
+                  <ListTransaction
+                    id={item.id}
+                    name={item.name}
+                    amount={item.amount}
+                    isTransfer={item.userAs}
+                    picture={item.picture}
+                    createdAt={item.createdAt}
+                  />
+                );
+              }}
+              refreshing={listRefresh}
+              onRefresh={fetchNewData}
+              onEndReached={nextData}
+              onEndReachedThreshold={1}
+            />
+          )}
         </View>
         <View style={style.rowFilter}>
           <TouchableOpacity
@@ -219,6 +229,12 @@ const style = StyleSheet.create({
   flatListWrapper: {
     flex: 1,
     paddingHorizontal: 16,
+  },
+  indicatorWrapper: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   rowFilter: {
     flexDirection: 'row',

@@ -5,7 +5,7 @@ import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 export default function Button(props) {
   return (
-    <Fragment>
+    <Fragment >
       <TouchableOpacity
         disabled={props.disabled ? true : false}
         style={styles.button(props.disabled)}

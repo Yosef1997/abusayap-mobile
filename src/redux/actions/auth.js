@@ -26,22 +26,32 @@ export const signup = (username, email, password) => {
       });
     } catch (err) {
       console.log(err);
-      const {message} = err.response.data;
       dispatch({
         type: 'SET_LOADING',
       });
-      dispatch({
-        type: 'SET_MESSAGE',
-        payload: {
-          message,
-          type: 'warning',
-        },
-      });
+      if (err.response) {
+        const {message} = err.response.data;
+        dispatch({
+          type: 'SET_MESSAGE',
+          payload: {
+            message,
+            type: 'warning',
+          },
+        });
+      } else {
+        dispatch({
+          type: 'SET_MESSAGE',
+          payload: {
+            message: 'Server error',
+            type: 'warning',
+          },
+        });
+      }
     }
   };
 };
 
-export const signin = (email, password) => {
+export const signin = (email, password, notificationToken) => {
   return async dispatch => {
     dispatch({
       type: 'SET_LOADING',
@@ -49,6 +59,8 @@ export const signin = (email, password) => {
     const params = new URLSearchParams();
     params.append('email', email);
     params.append('password', password);
+    params.append('token', notificationToken);
+
     try {
       const results = await http().post('/auth/login', params);
       const token = results.data.results.token;
@@ -67,29 +79,36 @@ export const signin = (email, password) => {
       });
     } catch (err) {
       console.log(err);
-      const {message} = err.response.data;
       dispatch({
         type: 'SET_LOADING',
       });
-      dispatch({
-        type: 'SET_MESSAGE',
-        payload: {
-          message,
-          type: 'warning',
-        },
-      });
+      if (err.response) {
+        const {message} = err.response.data;
+        dispatch({
+          type: 'SET_MESSAGE',
+          payload: {
+            message,
+            type: 'warning',
+          },
+        });
+      }
     }
   };
 };
 
-export const signout = () => {
+export const signout = token => {
   return async dispatch => {
-    dispatch({
-      type: 'SIGNOUT',
-    });
-    dispatch({
-      type: 'CLEAN',
-    });
+    try {
+      await http(token).post('/auth/logout');
+      dispatch({
+        type: 'SIGNOUT',
+      });
+      dispatch({
+        type: 'CLEAN',
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 };
 export const updateProfile = data => ({
